@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { FormEvent, ReactNode } from 'react'
+import type { FormEvent, MouseEvent, ReactNode } from 'react'
 import './App.css'
 
 type NvdCve = {
@@ -129,6 +129,7 @@ function uniqueReferenceHosts(cve: NvdCve) {
 
 function App() {
   const [theme, setTheme] = useState<Theme>(readTheme)
+  const themeTimer = useRef<number | undefined>(undefined)
   const [input, setInput] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     return params.get('site') || params.get('cve')?.toUpperCase() || ''
@@ -351,6 +352,19 @@ function App() {
     setHistory([])
   }
 
+  const switchTheme = (event: MouseEvent<HTMLButtonElement>) => {
+    const root = document.documentElement
+    const button = event.currentTarget.getBoundingClientRect()
+    root.style.setProperty('--theme-origin-x', `${button.left + button.width / 2}px`)
+    root.style.setProperty('--theme-origin-y', `${button.top + button.height / 2}px`)
+    root.classList.remove('theme-bloom')
+    void root.offsetWidth
+    root.classList.add('theme-bloom')
+    window.clearTimeout(themeTimer.current)
+    themeTimer.current = window.setTimeout(() => root.classList.remove('theme-bloom'), 760)
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
+
   return (
     <div className="app-shell">
       <aside className="history-rail" aria-label="Recent CVE lookups">
@@ -374,7 +388,7 @@ function App() {
       <main className="workspace">
         <header className="topbar">
           <div className="breadcrumbs"><span>Research</span><span className="crumb-slash">/</span><span className="crumb-current">{searchMode === 'site' ? 'Site search' : 'CVE lookup'}</span></div>
-          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
+          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={switchTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
         </header>
 
         <section className="search-zone" aria-labelledby="page-title">
