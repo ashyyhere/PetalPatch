@@ -59,15 +59,26 @@ Enter a CVE ID or a search term. CVE Atlas fetches the relevant public records, 
 **Requirements:** Node.js `20.19+` or `22.12+`, and npm.
 
 ```sh
+git clone https://github.com/ashyyhere/PetalPatch.git
+cd PetalPatch
 npm install
 npm run dev
 ```
 
-Run these commands from the repository root, then open the local URL printed by Vite. No environment variables or API keys are required.
+Open the local address printed by Vite. No environment variables or API keys are needed.
 
-## Deploy to Cloudflare Pages
+## 🛠️ Commands
 
-Connect this GitHub repository to Cloudflare Pages and use these build settings:
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local development server. |
+| `npm run build` | Type-check and create the production site in `dist/`. |
+| `npm run preview` | Preview the production build locally. Run the build first. |
+| `npm run lint` | Check source files with Oxlint. |
+
+## ☁️ Deployment
+
+For **Cloudflare Pages**, connect this repository and set:
 
 | Setting | Value |
 | --- | --- |
