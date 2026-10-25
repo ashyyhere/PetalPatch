@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import './App.css'
 
@@ -20,11 +20,14 @@ type Product = { vendor: string; name: string; versions: string[] }
 type Recent = { id: string; description: string; date: string }
 type SearchResult = { cve: NvdCve }
 type NewsArticle = { url: string; title: string; seendate: string; domain: string; language?: string }
+type UbuntuPackage = { name: string; statuses?: { release_codename: string; status: string; description?: string; pocket?: string }[] }
+type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: number; updated_at?: string; ubuntu_description?: string; notices_ids?: string[]; packages?: UbuntuPackage[] }
 
 const HISTORY_KEY = 'cve-atlas-history-v1'
 const THEME_KEY = 'cve-atlas-theme-v1'
 const DEFAULT_CVE = 'CVE-2021-44228'
 const API_ROOT = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
+const UBUNTU_API_ROOT = 'https://ubuntu.com/security/cves'
 
 type Theme = 'light' | 'dark'
 
@@ -143,6 +146,11 @@ function App() {
   const [newsUnavailable, setNewsUnavailable] = useState(false)
   const [siteTotal, setSiteTotal] = useState(0)
   const [siteQuery, setSiteQuery] = useState('')
+  const [ubuntuRecord, setUbuntuRecord] = useState<UbuntuCve>()
+  const [ubuntuLoading, setUbuntuLoading] = useState(false)
+  const [ubuntuUnavailable, setUbuntuUnavailable] = useState(false)
+  const ubuntuRequest = useRef<AbortController | null>(null)
+  const lookupGeneration = useRef(0)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -151,7 +159,13 @@ function App() {
   }, [theme])
 
   const lookup = useCallback(async (rawId: string) => {
+    const generation = ++lookupGeneration.current
     const id = rawId.trim().toUpperCase()
+    ubuntuRequest.current?.abort()
+    ubuntuRequest.current = null
+    setUbuntuRecord(undefined)
+    setUbuntuLoading(false)
+    setUbuntuUnavailable(false)
     setSearchMode('cve')
     setSiteResults([])
     setNewsResults([])
@@ -173,7 +187,26 @@ function App() {
       const data = await response.json() as { vulnerabilities?: { cve: NvdCve }[] }
       const record = data.vulnerabilities?.[0]?.cve
       if (!record) throw new Error(`No public NVD record was found for ${id}. Check the ID or try again later.`)
+      if (generation !== lookupGeneration.current) return
       setCve(record)
+      const ubuntuController = new AbortController()
+      ubuntuRequest.current = ubuntuController
+      setUbuntuLoading(true)
+      const ubuntuTimeout = window.setTimeout(() => ubuntuController.abort(), 10000)
+      void fetch(`/api/ubuntu/cves/${encodeURIComponent(record.id)}.json`, { signal: ubuntuController.signal })
+        .then(async (ubuntuResponse) => {
+          if (!ubuntuResponse.ok) throw new Error(`Ubuntu returned ${ubuntuResponse.status}`)
+          return await ubuntuResponse.json() as UbuntuCve
+        })
+        .then((ubuntuData) => {
+          if (!ubuntuController.signal.aborted && ubuntuData.id === record.id) setUbuntuRecord(ubuntuData)
+          else if (!ubuntuController.signal.aborted) setUbuntuUnavailable(true)
+        })
+        .catch(() => { if (ubuntuRequest.current === ubuntuController) setUbuntuUnavailable(true) })
+        .finally(() => {
+          window.clearTimeout(ubuntuTimeout)
+          if (ubuntuRequest.current === ubuntuController) setUbuntuLoading(false)
+        })
       setStatus('Record retrieved')
       const nextHistory = [{ id: record.id, description: getDescription(record), date: record.published }, ...readHistory().filter((item) => item.id !== record.id)].slice(0, 7)
       setHistory(nextHistory)
@@ -183,6 +216,7 @@ function App() {
       params.set('cve', record.id)
       window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
     } catch (cause) {
+      if (generation !== lookupGeneration.current) return
       const message = cause instanceof Error && cause.name === 'AbortError'
         ? 'NVD did not respond in time. Check your connection and retry.'
         : cause instanceof Error ? cause.message : 'Something went wrong while retrieving this CVE.'
@@ -190,11 +224,17 @@ function App() {
       setStatus('Source unavailable')
     } finally {
       window.clearTimeout(timeout)
-      setLoading(false)
+      if (generation === lookupGeneration.current) setLoading(false)
     }
   }, [])
 
   const searchSite = useCallback(async (rawQuery: string) => {
+    lookupGeneration.current += 1
+    ubuntuRequest.current?.abort()
+    ubuntuRequest.current = null
+    setUbuntuRecord(undefined)
+    setUbuntuLoading(false)
+    setUbuntuUnavailable(false)
     const query = rawQuery.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '')
     if (query.length < 2) {
       setError('Enter a site name or domain with at least 2 characters.')
@@ -387,6 +427,19 @@ function App() {
               <div className="data-point"><span className="data-label">LAST UPDATED</span><b>{formatDate(cve.lastModified)}</b></div>
               <div className="data-point"><span className="data-label">ASSESSMENT</span><b>{score ? `${score.baseSeverity} · ${score.baseScore.toFixed(1)}` : 'Not assessed'}</b><small>{score ? `CVSS ${score.version}` : 'No NVD score available'}</small></div>
             </div>
+
+            <section className="report-section ubuntu-section" aria-label="Ubuntu security information">
+              <div className="section-title"><span className="section-rail rail-blue" /><h3>Ubuntu Security</h3><span className="ubuntu-preview-label">Public API · preview</span><a className="ubuntu-record-link" href={`${UBUNTU_API_ROOT}/${encodeURIComponent(cve.id)}`} target="_blank" rel="noreferrer">Open record <Icon name="external" size={13} /></a></div>
+              {ubuntuLoading && <p className="section-empty" aria-live="polite">Checking Ubuntu’s package tracker…</p>}
+              {ubuntuUnavailable && <p className="section-empty">Ubuntu’s tracker did not return a record just now. <a href={`${UBUNTU_API_ROOT}/${encodeURIComponent(cve.id)}`} target="_blank" rel="noreferrer">Try the Ubuntu record directly</a>.</p>}
+              {ubuntuRecord && <>
+                <p className="ubuntu-note">Ubuntu tracks package impact and fixes separately from NVD. Statuses below apply to Ubuntu releases and packages; this overview shows up to five packages and eight release entries per package.</p>
+                <div className="ubuntu-facts"><span><small>TRACKER STATUS</small><b>{ubuntuRecord.status || 'Not provided'}</b></span><span><small>UBUNTU PRIORITY</small><b>{ubuntuRecord.priority || 'Not provided'}</b></span>{typeof ubuntuRecord.cvss3 === 'number' && <span><small>UBUNTU CVSS 3</small><b>{ubuntuRecord.cvss3.toFixed(1)}</b></span>}{ubuntuRecord.updated_at && <span><small>TRACKER UPDATED</small><b>{formatDate(ubuntuRecord.updated_at)}</b></span>}</div>
+                {ubuntuRecord.packages?.length ? <div className="ubuntu-packages">{ubuntuRecord.packages.slice(0, 5).map((pkg) => <div className="ubuntu-package" key={pkg.name}><b>{pkg.name}</b><div>{(pkg.statuses || []).slice(0, 8).map((status) => <span className="ubuntu-status" key={`${pkg.name}-${status.release_codename}`}><strong>{status.release_codename}</strong>{status.status.replaceAll('-', ' ')}{status.description && <small>{status.description}</small>}</span>)}</div></div>)}</div> : <p className="section-empty">Ubuntu has no package-level statuses listed for this CVE.</p>}
+                {!!ubuntuRecord.notices_ids?.length && <div className="ubuntu-notices"><span>Ubuntu security notices</span>{ubuntuRecord.notices_ids.slice(0, 4).map((notice) => <a key={notice} href={`https://ubuntu.com/security/notices/${encodeURIComponent(notice)}`} target="_blank" rel="noreferrer">{notice} <Icon name="external" size={12} /></a>)}</div>}
+              </>}
+              <small className="ubuntu-api-note">Ubuntu labels this JSON API as work in progress; verify time-sensitive package status on its official record.</small>
+            </section>
 
             <section className="report-section affected-section">
               <div className="section-title"><span className="section-rail" /><h3>Affected products</h3><span className="section-count">{products.length.toString().padStart(2, '0')}</span></div>

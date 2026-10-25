@@ -1,9 +1,12 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "petalpatch",
-  "compatibility_date": "2026-10-26",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-10-24",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/ubuntu/*"]
   }
 }

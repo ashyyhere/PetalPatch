@@ -6,6 +6,7 @@
 /dist-ssr/
 /.vite/
 /_vite/
+/.wrangler/
 /coverage/
 *.tsbuildinfo
 

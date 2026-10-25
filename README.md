@@ -21,24 +21,24 @@
 | --- | --- |
 | **What it is** | A browser based workspace for researching public CVE records and related reporting. |
 | **Built with** | React, TypeScript, and Vite. |
-| **Data** | NVD CVE API and GDELT news search. |
-| **Backend or API key** | None required; the browser requests public data sources directly. |
+| **Data** | NVD CVE API, Ubuntu Security Tracker, and GDELT news search. |
+| **Backend or API key** | No keys. The Cloudflare Worker relays Ubuntu CVE JSON through a same-origin route; other public data is requested by the browser. |
 | **Search links** | CVE lookups and site searches can be shared through the URL. |
 
 ## ✨ What you can do
 
 | Search | What appears |
 | --- | --- |
-| **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. |
+| **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. Ubuntu CVE lookups also show Ubuntu package statuses, priority, and related security notices. |
 | **Site, domain, or product** | Up to 20 of the newest NVD keyword matches, plus public news coverage from the past six months when available. |
 | **Recent lookups** | Up to seven CVE IDs saved in this browser, so you can pick up where you left off. |
 
 ## 🌷 How it works
 
-Enter a CVE ID or a search term. PetalPatch fetches the relevant public records, then gives you a readable report with links back to the sources. Recent CVE IDs stay in this browser; search terms are also written to the URL so a lookup can be shared.
+Enter a CVE ID or a search term. PetalPatch fetches the relevant public records, then gives you a readable report with links back to the sources. CVE lookups check Ubuntu’s CVE tracker for Ubuntu-specific package statuses and security notices. Recent CVE IDs stay in this browser; search terms are also written to the URL so a lookup can be shared.
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters PetalPatch, which requests records from NVD and reporting from GDELT, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
+  <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters PetalPatch, which requests NVD records, Ubuntu package statuses, and GDELT reporting, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
 </p>
 
 ## 🧾 Data & care
@@ -46,6 +46,7 @@ Enter a CVE ID or a search term. PetalPatch fetches the relevant public records,
 | Information | Source | How to read it |
 | --- | --- | --- |
 | CVE details, dates, scores, affected products, references | [NVD](https://nvd.nist.gov/developers/vulnerabilities) | Fields reflect what NVD has in the record. Missing fields stay marked as unavailable. |
+| Ubuntu package impact, status, priority, security notices | [Ubuntu Security Tracker](https://ubuntu.com/security/) | Ubuntu-specific assessments are shown separately from NVD data. The Ubuntu JSON API is a work in progress and may change; follow the linked official record for current package guidance. |
 | Site and product matches | NVD keyword search | A match means the term appears in searchable record content; it does not establish that the issue was found or exploited on that domain. |
 | Related news | [GDELT](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) | A research lead, not independent verification of an article’s claims. |
 | Discovery or attempted-attack domain | Only when a cited source says so | CVE records usually do not identify where a vulnerability was discovered or attempted. Reference-link domains are shown separately. |
@@ -87,13 +88,14 @@ This repository is set up for **Cloudflare Workers Builds** with static assets. 
 | Deploy command | `npx wrangler deploy` |
 | Root directory | `/` (repository root) |
 
-`wrangler.jsonc` points the Worker at Vite’s `dist/` output and enables the custom `404.html` page for unknown paths. PetalPatch searches use query strings (for example, `/?cve=CVE-2021-44228`), which continue to work from the home page. If you add client-side routes later, revisit the not-found behavior.
+`wrangler.jsonc` points the Worker at Vite’s `dist/` output, relays read-only Ubuntu CVE requests under `/api/ubuntu/`, and enables the custom `404.html` page for unknown paths. PetalPatch searches use query strings (for example, `/?cve=CVE-2021-44228`), which continue to work from the home page. If you add client-side routes later, revisit the not-found behavior.
 
 ## 🗂️ Project map
 
 | Path | What lives here |
 | --- | --- |
 | `src/App.tsx` | Search flows, public API requests, and CVE report components. |
+| `src/worker.ts` | Static asset hosting and the same-origin Ubuntu security data route. |
 | `src/App.css` | Workspace and component styles. |
 | `src/index.css` | Global styles and design tokens. |
 | `public/` | Static assets and the editable 404 page. |

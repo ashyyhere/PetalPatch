@@ -163,6 +163,27 @@
 .product-name small { overflow: hidden; color: #7f8da9; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .product-version { justify-self: end; color: #68799b; font: 9px var(--mono); line-height: 1.7; text-align: right; }
 .section-empty { margin: 0; color: #7080a0; font-size: 11px; line-height: 1.6; }
+.ubuntu-section { padding-top: 18px; border-top: 1px solid #dce5f0; }
+.ubuntu-section .section-title { flex-wrap: wrap; }
+.ubuntu-preview-label { margin-left: auto; color: #8290ad; font: 8px var(--mono); }
+.ubuntu-record-link { display: inline-flex; align-items: center; gap: 5px; color: #4f5e92; font-size: 10px; text-decoration: none; }
+.ubuntu-record-link:hover, .ubuntu-section .section-empty a:hover { color: #6359a9; text-decoration: underline; text-underline-offset: 3px; }
+.ubuntu-note { margin: 0 0 13px; color: #667899; font-size: 10px; line-height: 1.65; }
+.ubuntu-facts { display: flex; flex-wrap: wrap; gap: 9px 22px; padding: 10px 0 12px; border-top: 1px solid #e1e8f2; border-bottom: 1px solid #e1e8f2; }
+.ubuntu-facts span { display: grid; gap: 4px; }
+.ubuntu-facts small { color: #8290ad; font: 8px var(--mono); letter-spacing: .04em; }
+.ubuntu-facts b { color: #35456f; font-size: 10px; font-weight: 650; text-transform: capitalize; }
+.ubuntu-packages { display: grid; }
+.ubuntu-package { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(0, 1.3fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid #e1e8f2; }
+.ubuntu-package > b { overflow-wrap: anywhere; color: #304169; font: 10px var(--mono); }
+.ubuntu-package > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.ubuntu-status { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px; padding: 4px 6px; border: 1px solid #dce5f0; color: #59698d; background: #f5f8fd; font-size: 9px; text-transform: capitalize; }
+.ubuntu-status strong { color: #40537d; font: 9px var(--mono); }
+.ubuntu-status small { flex-basis: 100%; color: #7684a1; font-size: 8px; }
+.ubuntu-notices { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 13px; padding: 12px 0 0; }
+.ubuntu-notices > span { color: #7886a4; font-size: 9px; }
+.ubuntu-notices a { display: inline-flex; align-items: center; gap: 4px; color: #4f5e92; font: 9px var(--mono); text-decoration: none; }
+.ubuntu-api-note { display: block; margin-top: 13px; color: #8290ad; font-size: 9px; line-height: 1.55; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
 .weakness-tag { padding: 6px 8px; border: 1px solid #cfd4ec; color: #555595; background: #f5f4fd; font: 9px var(--mono); }
 
@@ -228,6 +249,13 @@
 :root[data-theme='dark'] .data-rail { border-color: #46506a; }
 :root[data-theme='dark'] .data-point + .data-point, :root[data-theme='dark'] .data-point:last-child, :root[data-theme='dark'] .report-side, :root[data-theme='dark'] .report-side .domain-block { border-color: #343d55; }
 :root[data-theme='dark'] .weakness-tag { border-color: #555274; color: #d1c9ff; background: #2b2a42; }
+:root[data-theme='dark'] .ubuntu-section, :root[data-theme='dark'] .ubuntu-facts, :root[data-theme='dark'] .ubuntu-package { border-color: #343d55; }
+:root[data-theme='dark'] .ubuntu-note, :root[data-theme='dark'] .ubuntu-preview-label, :root[data-theme='dark'] .ubuntu-api-note, :root[data-theme='dark'] .ubuntu-notices > span { color: #aab6d0; }
+:root[data-theme='dark'] .ubuntu-record-link, :root[data-theme='dark'] .ubuntu-notices a { color: #c2baff; }
+:root[data-theme='dark'] .ubuntu-facts b, :root[data-theme='dark'] .ubuntu-package > b { color: #dce3f5; }
+:root[data-theme='dark'] .ubuntu-status { border-color: #3e4962; color: #c0c9df; background: #252c41; }
+:root[data-theme='dark'] .ubuntu-status strong { color: #dce3f5; }
+:root[data-theme='dark'] .ubuntu-status small { color: #aab6d0; }
 :root[data-theme='dark'] .unknown-mark { border-color: #7770b2; color: #d0c9ff; background: #28283f; }
 :root[data-theme='dark'] .severity-stamp.severity-critical, :root[data-theme='dark'] .severity-stamp.severity-high { color: #f2a9c4; background: #382637; }
 :root[data-theme='dark'] .severity-stamp.severity-medium { color: #e5c186; background: #383124; }
@@ -370,6 +398,10 @@
   .data-point:nth-child(3) { padding-left: 0; border-top: 1px solid #e0e7f1; border-left: 0; }
   .data-point:last-child { grid-column: auto; padding-left: 10px; border-top: 1px solid #e0e7f1; border-left: 1px solid #e0e7f1; }
   .product-row { grid-template-columns: 3px minmax(0, 1fr); gap: 10px; padding: 8px 0; }
+  .ubuntu-section .section-title { gap: 7px; }
+  .ubuntu-preview-label { margin-left: auto; }
+  .ubuntu-record-link { flex-basis: 100%; margin-left: 11px; }
+  .ubuntu-package { grid-template-columns: 1fr; gap: 7px; }
   .product-version { grid-column: 2; justify-self: start; text-align: left; }
   .references-block { margin-bottom: 0; }
   .page-footer { align-items: flex-start; flex-direction: column; gap: 8px; }
