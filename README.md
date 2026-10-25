@@ -41,12 +41,22 @@ Enter a CVE ID or a search term. CVE Atlas fetches the relevant public records, 
   <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters CVE Atlas, which requests records from NVD and reporting from GDELT, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
 </p>
 
-## Requirements
+## 🧾 Data & care
 
-- Node.js `20.19+` or `22.12+`
-- npm
+| Information | Source | How to read it |
+| --- | --- | --- |
+| CVE details, dates, scores, affected products, references | [NVD](https://nvd.nist.gov/developers/vulnerabilities) | Fields reflect what NVD has in the record. Missing fields stay marked as unavailable. |
+| Site and product matches | NVD keyword search | A match means the term appears in searchable record content; it does not establish that the issue was found or exploited on that domain. |
+| Related news | [GDELT](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) | A research lead, not independent verification of an article’s claims. |
+| Discovery or attempted-attack domain | Only when a cited source says so | CVE records usually do not identify where a vulnerability was discovered or attempted. Reference-link domains are shown separately. |
+| Reporting source | NVD record | This may be an organization or mailbox, rather than the individual researcher. |
 
-## Run locally
+> [!NOTE]
+> CVE Atlas does not scan websites, confirm exploitability, or infer discovery locations. Follow the linked advisory and source record before drawing conclusions. Public services may rate-limit requests or be temporarily unavailable.
+
+## 🚀 Get started
+
+**Requirements:** Node.js `20.19+` or `22.12+`, and npm.
 
 ```sh
 npm install
