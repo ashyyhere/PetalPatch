@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 510" role="img" aria-labelledby="title desc">
-  <title id="title">How CVE Atlas works</title>
-  <desc id="desc">A search goes to CVE Atlas, which requests CVE records from NVD and news from GDELT, then presents a sourced report. Recent CVE IDs are kept in browser storage and searches are shareable by URL.</desc>
+  <title id="title">How PetalPatch works</title>
+  <desc id="desc">A search goes to PetalPatch, which requests CVE records from NVD and news from GDELT, then presents a sourced report. Recent CVE IDs are kept in browser storage and searches are shareable by URL.</desc>
   <defs>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="6.5" refY="4" orient="auto">
       <path d="M0 0 8 4 0 8Z" fill="#8a83bd" />
@@ -30,7 +30,7 @@
 
     <rect x="352" y="145" width="276" height="208" rx="20" fill="#fbfcff" stroke="#aaa1d5" stroke-width="1.4" />
     <path d="M379 180c8-15 18-15 26 0 8-15 18-15 26 0-8 14-18 14-26 0-8 14-18 14-26 0Z" fill="#bdb5eb" opacity=".72" />
-    <text x="379" y="222" fill="#18254a" font-family="Georgia, serif" font-size="23">CVE Atlas</text>
+    <text x="379" y="222" fill="#18254a" font-family="Georgia, serif" font-size="23">PetalPatch</text>
     <text x="379" y="247" fill="#536487" font-size="13">Fetches public records and</text>
     <text x="379" y="267" fill="#536487" font-size="13">organizes the useful details.</text>
     <line x1="379" y1="288" x2="601" y2="288" stroke="#dce5f0" />

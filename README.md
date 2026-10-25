@@ -1,4 +1,4 @@
-# CVE Atlas ✿
+# PetalPatch ✿
 
 <p align="center">
   A little research desk for public vulnerability records.<br />
@@ -35,10 +35,10 @@
 
 ## 🌷 How it works
 
-Enter a CVE ID or a search term. CVE Atlas fetches the relevant public records, then gives you a readable report with links back to the sources. Recent CVE IDs stay in this browser; search terms are also written to the URL so a lookup can be shared.
+Enter a CVE ID or a search term. PetalPatch fetches the relevant public records, then gives you a readable report with links back to the sources. Recent CVE IDs stay in this browser; search terms are also written to the URL so a lookup can be shared.
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters CVE Atlas, which requests records from NVD and reporting from GDELT, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
+  <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters PetalPatch, which requests records from NVD and reporting from GDELT, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
 </p>
 
 ## 🧾 Data & care
@@ -52,7 +52,7 @@ Enter a CVE ID or a search term. CVE Atlas fetches the relevant public records, 
 | Reporting source | NVD record | This may be an organization or mailbox, rather than the individual researcher. |
 
 > [!NOTE]
-> CVE Atlas does not scan websites, confirm exploitability, or infer discovery locations. Follow the linked advisory and source record before drawing conclusions. Public services may rate-limit requests or be temporarily unavailable.
+> PetalPatch does not scan websites, confirm exploitability, or infer discovery locations. Follow the linked advisory and source record before drawing conclusions. Public services may rate-limit requests or be temporarily unavailable.
 
 ## 🚀 Get started
 
@@ -87,7 +87,7 @@ This repository is set up for **Cloudflare Workers Builds** with static assets. 
 | Deploy command | `npx wrangler deploy` |
 | Root directory | `/` (repository root) |
 
-`wrangler.jsonc` points the Worker at Vite’s `dist/` output and enables the custom `404.html` page for unknown paths. CVE Atlas searches use query strings (for example, `/?cve=CVE-2021-44228`), which continue to work from the home page. If you add client-side routes later, revisit the not-found behavior.
+`wrangler.jsonc` points the Worker at Vite’s `dist/` output and enables the custom `404.html` page for unknown paths. PetalPatch searches use query strings (for example, `/?cve=CVE-2021-44228`), which continue to work from the home page. If you add client-side routes later, revisit the not-found behavior.
 
 ## 🗂️ Project map
 
@@ -108,4 +108,4 @@ Ideas and bug reports are welcome—[open an issue](https://github.com/ashyyhere
 
 This repository does not include a license yet. Until one is added, reuse and redistribution are not granted.
 
-<p align="center"><sub>Made for curious minds; grounded in public sources. <a href="#cve-atlas-">Back to top ↑</a></sub></p>
+<p align="center"><sub>Made for curious minds; grounded in public sources. <a href="#petalpatch-">Back to top ↑</a></sub></p>

@@ -1,8 +1,8 @@
-# CVE Atlas design direction
+# PetalPatch design direction
 
 ## Visual world
 
-CVE Atlas is a calm, luminous research desk for public vulnerability records. Its visual language takes cues from the spacious, pale blue and violet atmosphere of [Love Unseen Beneath the Clear Night Sky](https://sh-anime.shochiku.co.jp/kakekoi/en/) while using original CSS linework and a restrained editorial layout. It does not reuse the anime's artwork, marks, or copy.
+PetalPatch is a calm, luminous research desk for public vulnerability records. Its visual language takes cues from the spacious, pale blue and violet atmosphere of [Love Unseen Beneath the Clear Night Sky](https://sh-anime.shochiku.co.jp/kakekoi/en/) while using original CSS linework and a restrained editorial layout. It does not reuse the anime's artwork, marks, or copy.
 
 ## Durable decisions
 

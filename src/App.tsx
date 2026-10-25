@@ -314,9 +314,9 @@ function App() {
   return (
     <div className="app-shell">
       <aside className="history-rail" aria-label="Recent CVE lookups">
-        <a className="brand" href="/" aria-label="CVE Atlas home">
+        <a className="brand" href="/" aria-label="PetalPatch home">
           <span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M14 13.6C8.7 13.2 7.2 8.4 9.4 6.1c2.5-2.5 5.7.2 4.6 7.5Z"/><path d="M14.4 14C14 8.7 18.8 7.2 21.1 9.4c2.5 2.5-.2 5.7-7.5 4.6Z"/><path d="M14 14.4c5.3-.4 6.8 4.4 4.6 6.7-2.5 2.5-5.7-.2-4.6-7.5Z"/><path d="M13.6 14c.4 5.3-4.4 6.8-6.7 4.6-2.5-2.5.2-5.7 7.5-4.6Z"/><circle cx="14" cy="14" r="1.5"/></svg></span>
-          <span className="brand-name">CVE <b>ATLAS</b></span>
+          <span className="brand-name">Petal<b>Patch</b></span>
         </a>
         <div className="rail-section">
           <div className="rail-heading"><span>Recent lookups</span><span className="rail-count">{history.length.toString().padStart(2, '0')}</span></div>
@@ -328,7 +328,7 @@ function App() {
           </div> : <p className="history-empty">Your lookups appear here on this device.</p>}
           {!!history.length && <button className="clear-history" onClick={clearHistory}>Clear history</button>}
         </div>
-        <div className="rail-bottom"><span className="rail-live"><i /> NVD public data</span><span className="rail-version">ATLAS / 01</span></div>
+        <div className="rail-bottom"><span className="rail-live"><i /> NVD public data</span><span className="rail-version">PETALPATCH / CVE</span></div>
       </aside>
 
       <main className="workspace">
