@@ -30,6 +30,7 @@
 | Search | What appears |
 | --- | --- |
 | **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. Ubuntu CVE lookups also show Ubuntu package statuses, priority, and related security notices. Additional source links help researchers cross-check CERT-In, CISA KEV, OSV, and CVE records. |
+| **Affected products** | Browse a compact preview, filter by product or vendor, and narrow a long list with vendor counts. Expand the full matching set when needed. |
 | **Site, domain, or product** | Up to 20 of the newest NVD keyword matches, plus public news coverage from the past six months when available. |
 | **Recent lookups** | Up to seven CVE IDs saved in this browser, so you can pick up where you left off. |
 
