@@ -22,10 +22,21 @@ type SearchResult = { cve: NvdCve }
 type NewsArticle = { url: string; title: string; seendate: string; domain: string; language?: string }
 
 const HISTORY_KEY = 'cve-atlas-history-v1'
+const THEME_KEY = 'cve-atlas-theme-v1'
 const DEFAULT_CVE = 'CVE-2021-44228'
 const API_ROOT = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
 
-function Icon({ name, size = 18 }: { name: 'search' | 'arrow' | 'external' | 'copy' | 'shield' | 'clock' | 'close' | 'refresh'; size?: number }) {
+type Theme = 'light' | 'dark'
+
+function readTheme(): Theme {
+  try {
+    const saved = localStorage.getItem(THEME_KEY)
+    if (saved === 'light' || saved === 'dark') return saved
+  } catch { /* Use the system preference when storage is unavailable. */ }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+function Icon({ name, size = 18 }: { name: 'search' | 'arrow' | 'external' | 'copy' | 'shield' | 'clock' | 'close' | 'refresh' | 'sun' | 'moon'; size?: number }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true as const }
   const paths: Record<string, ReactNode> = {
     search: <><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 4.2 4.2"/></>,
@@ -36,6 +47,8 @@ function Icon({ name, size = 18 }: { name: 'search' | 'arrow' | 'external' | 'co
     clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
     close: <><path d="m6 6 12 12M18 6 6 18"/></>,
     refresh: <><path d="M20 7v5h-5"/><path d="M4.9 9A7.5 7.5 0 0 1 18 6l2 6M4 17v-5h5"/><path d="M19.1 15A7.5 7.5 0 0 1 6 18l-2-6"/></>,
+    sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></>,
+    moon: <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/>,
   }
   return <svg {...common}>{paths[name]}</svg>
 }
@@ -112,6 +125,7 @@ function uniqueReferenceHosts(cve: NvdCve) {
 }
 
 function App() {
+  const [theme, setTheme] = useState<Theme>(readTheme)
   const [input, setInput] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     return params.get('site') || params.get('cve')?.toUpperCase() || DEFAULT_CVE
@@ -129,6 +143,12 @@ function App() {
   const [newsUnavailable, setNewsUnavailable] = useState(false)
   const [siteTotal, setSiteTotal] = useState(0)
   const [siteQuery, setSiteQuery] = useState('')
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#141827' : '#edf4fa')
+    try { localStorage.setItem(THEME_KEY, theme) } catch { /* Theme still applies for this session. */ }
+  }, [theme])
 
   const lookup = useCallback(async (rawId: string) => {
     const id = rawId.trim().toUpperCase()
@@ -295,7 +315,7 @@ function App() {
     <div className="app-shell">
       <aside className="history-rail" aria-label="Recent CVE lookups">
         <a className="brand" href="/" aria-label="CVE Atlas home">
-          <span className="brand-mark"><span /><span /><span /></span>
+          <span className="brand-mark" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M14 13.6C8.7 13.2 7.2 8.4 9.4 6.1c2.5-2.5 5.7.2 4.6 7.5Z"/><path d="M14.4 14C14 8.7 18.8 7.2 21.1 9.4c2.5 2.5-.2 5.7-7.5 4.6Z"/><path d="M14 14.4c5.3-.4 6.8 4.4 4.6 6.7-2.5 2.5-5.7-.2-4.6-7.5Z"/><path d="M13.6 14c.4 5.3-4.4 6.8-6.7 4.6-2.5-2.5.2-5.7 7.5-4.6Z"/><circle cx="14" cy="14" r="1.5"/></svg></span>
           <span className="brand-name">CVE <b>ATLAS</b></span>
         </a>
         <div className="rail-section">
@@ -314,7 +334,7 @@ function App() {
       <main className="workspace">
         <header className="topbar">
           <div className="breadcrumbs"><span>Research</span><span className="crumb-slash">/</span><span className="crumb-current">{searchMode === 'site' ? 'Site search' : 'CVE lookup'}</span></div>
-          <div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div>
+          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
         </header>
 
         <section className="search-zone" aria-labelledby="page-title">
@@ -358,8 +378,8 @@ function App() {
 
         {cve && <article className="report" aria-label={`Report for ${cve.id}`}>
           <div className="report-main">
-            <div className="report-kicker"><span className="live-dot" /> SOURCE RECORD <span className="kicker-rule" /> {cve.vulnStatus || 'Status not provided'}</div>
-            <div className="report-title-row"><h2>{cve.id}</h2><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><button className="icon-button" title={copiedLink ? 'Copied search link' : 'Copy search link'} aria-label={copiedLink ? 'Copied search link' : 'Copy search link'} onClick={copySearchLink}><Icon name="copy" size={17} /><span>{copiedLink ? 'Link copied' : 'Copy link'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
+            <div className="report-kicker"><span className="live-dot" /> NVD record <span className="kicker-rule" /> {cve.vulnStatus || 'Status not provided'}</div>
+            <div className="report-title-row"><div className="report-identity"><h2>{cve.id}</h2>{score && <span className={`severity-stamp severity-${score.baseSeverity.toLowerCase()}`}><span className="stamp-label">CVSS {score.version}</span>{score.baseSeverity} <b>{score.baseScore.toFixed(1)}</b></span>}</div><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><button className="icon-button" title={copiedLink ? 'Copied search link' : 'Copy search link'} aria-label={copiedLink ? 'Copied search link' : 'Copy search link'} onClick={copySearchLink}><Icon name="copy" size={17} /><span>{copiedLink ? 'Link copied' : 'Copy link'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
             <p className="description">{getDescription(cve)}</p>
             <div className="data-rail" aria-label="CVE summary">
               <div className="data-point"><span className="data-label">PUBLISHED</span><b>{formatDate(cve.published)}</b></div>

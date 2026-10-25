@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
   color: #18254a;
   background: #edf4fa;
@@ -22,8 +23,33 @@
   --blue: #63a9c5;
   --lilac: #bdb5eb;
   --rose: #edc8d8;
+  --focus: #746ac5;
+  --surface-raised: #ffffff;
+  --surface-subtle: #f4f8fe;
   --mono: 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
   --display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  background: #141827;
+  --canvas: #141827;
+  --paper: #1c2132;
+  --paper-blue: #20263a;
+  --panel: #252c41;
+  --line: #414a63;
+  --line-soft: #343d55;
+  --ink: #edf0fb;
+  --muted: #c0c9df;
+  --faint: #a1adc9;
+  --green: #b8aff2;
+  --red: #e9a5be;
+  --blue: #8acbe0;
+  --lilac: #aaa0e8;
+  --rose: #dd9ab6;
+  --focus: #b8aff2;
+  --surface-raised: #20263a;
+  --surface-subtle: #252c41;
 }
 
 * { box-sizing: border-box; }
@@ -31,9 +57,9 @@ html { min-width: 320px; min-height: 100%; background: var(--canvas); }
 body { min-width: 320px; min-height: 100vh; margin: 0; }
 button, input { font: inherit; }
 button { color: inherit; }
-button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid #746ac5; outline-offset: 3px; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 a { color: inherit; }
-::selection { color: #17244a; background: #d8d2f3; }
+::selection { color: var(--ink); background: rgba(130,120,207,.32); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #edf4fa; }
-::-webkit-scrollbar-thumb { background: #becbe0; border: 3px solid #edf4fa; border-radius: 10px; }
+::-webkit-scrollbar-track { background: var(--canvas); }
+::-webkit-scrollbar-thumb { background: var(--line); border: 3px solid var(--canvas); border-radius: 10px; }
