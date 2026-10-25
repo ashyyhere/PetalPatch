@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent, MouseEvent, ReactNode } from 'react'
+import { flushSync } from 'react-dom'
 import './App.css'
 
 type NvdCve = {
@@ -140,6 +141,7 @@ function externalDatabasesFor(id: string): ExternalDatabase[] {
 function App() {
   const [theme, setTheme] = useState<Theme>(readTheme)
   const themeTimer = useRef<number | undefined>(undefined)
+  const themeTransitionGeneration = useRef(0)
   const [input, setInput] = useState(() => {
     const params = new URLSearchParams(window.location.search)
     return params.get('site') || params.get('cve')?.toUpperCase() || ''
@@ -388,15 +390,40 @@ function App() {
 
   const switchTheme = (event: MouseEvent<HTMLButtonElement>) => {
     const root = document.documentElement
+    const toggleButton = event.currentTarget
     const button = event.currentTarget.getBoundingClientRect()
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark'
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const transitionDocument = document as Document & { startViewTransition?: (callback: () => void) => { finished: Promise<void> } }
+    const generation = ++themeTransitionGeneration.current
     root.style.setProperty('--theme-origin-x', `${button.left + button.width / 2}px`)
     root.style.setProperty('--theme-origin-y', `${button.top + button.height / 2}px`)
     root.classList.remove('theme-bloom')
     void root.offsetWidth
     root.classList.add('theme-bloom')
+    toggleButton.classList.remove('is-switching')
+    if (!prefersReducedMotion) {
+      void toggleButton.offsetWidth
+      toggleButton.classList.add('is-switching')
+    }
     window.clearTimeout(themeTimer.current)
-    themeTimer.current = window.setTimeout(() => root.classList.remove('theme-bloom'), 760)
-    setTheme(theme === 'dark' ? 'light' : 'dark')
+    const finishTransition = () => {
+      if (generation !== themeTransitionGeneration.current) return
+      window.clearTimeout(themeTimer.current)
+      root.classList.remove('theme-bloom')
+      toggleButton.classList.remove('is-switching')
+    }
+    themeTimer.current = window.setTimeout(finishTransition, 760)
+    if (!prefersReducedMotion && transitionDocument.startViewTransition) {
+      const transition = transitionDocument.startViewTransition(() => {
+        root.dataset.theme = nextTheme
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'dark' ? '#111210' : '#ffffff')
+        flushSync(() => setTheme(nextTheme))
+      })
+      void transition.finished.then(finishTransition, finishTransition)
+    } else {
+      setTheme(nextTheme)
+    }
   }
 
   return (
@@ -422,7 +449,7 @@ function App() {
       <main className="workspace">
         <header className="topbar">
           <div className="breadcrumbs"><span>Research</span><span className="crumb-slash">/</span><span className="crumb-current">{searchMode === 'site' ? 'Site search' : 'CVE lookup'}</span></div>
-          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={switchTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
+          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={switchTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span><span className="theme-flower" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none"><path d="M14 13.6C8.7 13.2 7.2 8.4 9.4 6.1c2.5-2.5 5.7.2 4.6 7.5Z"/><path d="M14.4 14C14 8.7 18.8 7.2 21.1 9.4c2.5 2.5-.2 5.7-7.5 4.6Z"/><path d="M14 14.4c5.3-.4 6.8 4.4 4.6 6.7-2.5 2.5-5.7-.2-4.6-7.5Z"/><path d="M13.6 14c.4 5.3-4.4 6.8-6.7 4.6-2.5-2.5.2-5.7 7.5-4.6Z"/><circle cx="14" cy="14" r="1.5"/></svg></span></button></div>
         </header>
 
         <section className="search-zone" aria-labelledby="page-title">
