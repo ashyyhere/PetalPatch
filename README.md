@@ -87,7 +87,7 @@ For **Cloudflare Pages**, connect this repository and set:
 | Build command | `npm run build` |
 | Build output directory | `dist` |
 
-Vite copies files from `public/` into the root of `dist/`. The included `public/404.html` becomes `dist/404.html`, so Cloudflare Pages can show the custom page when someone opens an unknown URL. CVE Atlas uses query-string searches (such as `/?cve=CVE-2021-44228`), which continue to work from the home page. If client-side routes are added later, configure their fallback behavior alongside the custom 404 page.
+The editable `public/404.html` is copied to `dist/404.html` for Cloudflare Pages. The app’s searches use query strings (for example, `/?cve=CVE-2021-44228`), so the custom 404 page does not interrupt those links. If you add client-side routes later, revisit the fallback behavior.
 
 ## Available scripts
 
