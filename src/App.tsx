@@ -160,6 +160,9 @@ function App() {
   const [ubuntuRecord, setUbuntuRecord] = useState<UbuntuCve>()
   const [ubuntuLoading, setUbuntuLoading] = useState(false)
   const [ubuntuUnavailable, setUbuntuUnavailable] = useState(false)
+  const [productFilter, setProductFilter] = useState('')
+  const [productsExpanded, setProductsExpanded] = useState(false)
+  const [activeVendor, setActiveVendor] = useState('All vendors')
   const ubuntuRequest = useRef<AbortController | null>(null)
   const lookupGeneration = useRef(0)
 
@@ -186,6 +189,9 @@ function App() {
     setSiteResults([])
     setNewsResults([])
     setCve(undefined)
+    setProductFilter('')
+    setProductsExpanded(false)
+    setActiveVendor('All vendors')
     if (!/^CVE-\d{4}-\d{4,}$/.test(id)) {
       setError('Enter a CVE ID in the format CVE-2024-12345.')
       return
@@ -333,6 +339,18 @@ function App() {
 
   const score = useMemo(() => cve ? metricFor(cve) : undefined, [cve])
   const products = useMemo(() => cve ? productsFor(cve) : [], [cve])
+  const productGroups = useMemo(() => {
+    const query = productFilter.trim().toLowerCase()
+    return products
+      .filter((product) => !query || `${product.vendor} ${product.name} ${product.versions.join(' ')}`.toLowerCase().includes(query))
+      .sort((a, b) => a.vendor.localeCompare(b.vendor) || a.name.localeCompare(b.name))
+  }, [products, productFilter])
+  const productVendorCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const product of products) counts.set(product.vendor, (counts.get(product.vendor) || 0) + 1)
+    return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b))
+  }, [products])
+  const visibleProducts = useMemo(() => activeVendor === 'All vendors' ? productGroups : productGroups.filter((product) => product.vendor === activeVendor), [activeVendor, productGroups])
   const weaknesses = useMemo(() => [...new Set((cve?.weaknesses || []).flatMap((item) => (item.description || []).filter((entry) => entry.lang === 'en').map((entry) => entry.value)))], [cve])
   const referenceHosts = useMemo(() => cve ? uniqueReferenceHosts(cve) : [], [cve])
   const externalDatabases = useMemo(() => cve ? externalDatabasesFor(cve.id) : [], [cve?.id])
@@ -472,7 +490,19 @@ function App() {
 
             <section className="report-section affected-section">
               <div className="section-title"><span className="section-rail" /><h3>Affected products</h3><span className="section-count">{products.length.toString().padStart(2, '0')}</span></div>
-              {products.length ? <div className="product-list">{products.map((product) => <div className="product-row" key={`${product.vendor}-${product.name}`}><span className="product-mark" /><div className="product-name"><b>{product.name}</b><small>{product.vendor}</small></div><span className="product-version">{product.versions.length ? product.versions.slice(0, 2).join(' · ') : 'Version details not listed'}</span></div>)}</div> : <p className="section-empty">No affected product details are listed in this NVD record.</p>}
+              {products.length ? <>
+                <div className="product-index-bar"><span>{productFilter ? `${productGroups.length} matching products` : `${products.length} products · ${productVendorCounts.length} vendors`}</span><label className="product-filter"><Icon name="search" size={14} /><span className="sr-only">Filter affected products</span><input value={productFilter} onChange={(event) => { setProductFilter(event.target.value); setActiveVendor('All vendors'); setProductsExpanded(false) }} placeholder="Find a product or vendor" /></label></div>
+                {productGroups.length ? <>
+                  <nav className="vendor-rail" aria-label="Filter affected products by vendor">
+                    <button className="vendor-filter" type="button" aria-pressed={activeVendor === 'All vendors'} onClick={() => { setActiveVendor('All vendors'); setProductsExpanded(false) }}><span>All vendors</span><small>{productFilter ? productGroups.length : products.length}</small></button>
+                    {productVendorCounts.map(([vendor, count]) => <button className="vendor-filter" type="button" key={vendor} aria-pressed={activeVendor === vendor} onClick={() => { setActiveVendor(vendor); setProductsExpanded(false) }}><span>{vendor}</span><small>{productFilter ? productGroups.filter((product) => product.vendor === vendor).length : count}</small></button>)}
+                  </nav>
+                  {visibleProducts.length ? <>
+                    <div className="product-catalog">{visibleProducts.slice(0, productsExpanded ? visibleProducts.length : 4).map((product) => <div className="product-entry" key={`${product.vendor}-${product.name}`}><div className="product-entry-heading"><b>{product.name}</b><span>{product.vendor}</span></div><div className="product-entry-versions">{product.versions.length ? <>{product.versions.slice(0, 2).join(' · ')}{product.versions.length > 2 && <span className="version-extra"> +{product.versions.length - 2} more</span>}</> : 'Version details not listed'}</div></div>)}</div>
+                    {visibleProducts.length > 4 && <button className={`product-expand${productsExpanded ? ' is-expanded' : ''}`} type="button" onClick={() => setProductsExpanded((expanded) => !expanded)}>{productsExpanded ? 'Show fewer products' : `Show all ${visibleProducts.length} ${activeVendor === 'All vendors' ? 'products' : `from ${activeVendor}`}`}<Icon name="arrow" size={14} /></button>}
+                  </> : <p className="section-empty">No products match “{productFilter}” for this vendor.</p>}
+                </> : <p className="section-empty">No products match “{productFilter}”.</p>}
+              </> : <p className="section-empty">No affected product details are listed in this NVD record.</p>}
             </section>
 
             <section className="report-section">
