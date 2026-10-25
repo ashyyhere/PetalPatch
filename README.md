@@ -89,30 +89,22 @@ For **Cloudflare Pages**, connect this repository and set:
 
 The editable `public/404.html` is copied to `dist/404.html` for Cloudflare Pages. The app’s searches use query strings (for example, `/?cve=CVE-2021-44228`), so the custom 404 page does not interrupt those links. If you add client-side routes later, revisit the fallback behavior.
 
-## Available scripts
+## 🗂️ Project map
 
-| Command | Description |
+| Path | What lives here |
 | --- | --- |
-| `npm run dev` | Start the Vite development server. |
-| `npm run build` | Type-check and create the production build in `dist/`. |
-| `npm run preview` | Preview the production build locally. Run `npm run build` first. |
-| `npm run lint` | Run Oxlint. |
+| `src/App.tsx` | Search flows, public API requests, and CVE report components. |
+| `src/App.css` | Workspace and component styles. |
+| `src/index.css` | Global styles and design tokens. |
+| `public/` | Static assets and the editable 404 page. |
+| `docs/architecture.svg` | The small “how it works” diagram above. |
 
-## Data sources
+## 🌱 Contributing
 
-- [National Vulnerability Database (NVD) CVE API 2.0](https://nvd.nist.gov/developers/vulnerabilities) — CVE records and keyword results.
-- [GDELT DOC 2.0 API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/) — public news article search.
-
-## Project structure
-
-```text
-src/
-  App.tsx       Search flows, API calls, and CVE report components
-  App.css       Workspace layout and component styling
-  index.css     Global styles and design tokens
-public/         Static assets and the editable Cloudflare Pages 404 page
-```
+Ideas and bug reports are welcome—[open an issue](https://github.com/ashyyhere/PetalPatch/issues) with what you expected and what happened. Please avoid including private vulnerability details or sensitive target information.
 
 ## License
 
-No license file is included yet. Add a `LICENSE` file before granting permission to reuse or redistribute this project.
+This repository does not include a license yet. Until one is added, reuse and redistribution are not granted.
+
+<p align="center"><sub>Made for curious minds; grounded in public sources. <a href="#cve-atlas-">Back to top ↑</a></sub></p>
