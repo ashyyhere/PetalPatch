@@ -158,6 +158,7 @@ function App() {
       setHistory(nextHistory)
       try { localStorage.setItem(HISTORY_KEY, JSON.stringify(nextHistory)) } catch { /* Lookup still works when storage is unavailable. */ }
       const params = new URLSearchParams(window.location.search)
+      params.delete('site')
       params.set('cve', record.id)
       window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`)
     } catch (cause) {
