@@ -121,6 +121,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
+  const [copiedLink, setCopiedLink] = useState(false)
   const [status, setStatus] = useState('Connecting to NVD')
   const [searchMode, setSearchMode] = useState<'cve' | 'site'>(() => new URLSearchParams(window.location.search).has('site') ? 'site' : 'cve')
   const [siteResults, setSiteResults] = useState<SearchResult[]>([])
@@ -277,6 +278,14 @@ function App() {
     } catch { setError('Clipboard access is unavailable in this browser.') }
   }
 
+  const copySearchLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopiedLink(true)
+      window.setTimeout(() => setCopiedLink(false), 1500)
+    } catch { setError('Could not copy the link. Copy it from the address bar instead.') }
+  }
+
   const clearHistory = () => {
     try { localStorage.removeItem(HISTORY_KEY) } catch { /* The visible list still clears for this session. */ }
     setHistory([])
@@ -350,7 +359,7 @@ function App() {
         {cve && <article className="report" aria-label={`Report for ${cve.id}`}>
           <div className="report-main">
             <div className="report-kicker"><span className="live-dot" /> SOURCE RECORD <span className="kicker-rule" /> {cve.vulnStatus || 'Status not provided'}</div>
-            <div className="report-title-row"><h2>{cve.id}</h2><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
+            <div className="report-title-row"><h2>{cve.id}</h2><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><button className="icon-button" title={copiedLink ? 'Copied search link' : 'Copy search link'} aria-label={copiedLink ? 'Copied search link' : 'Copy search link'} onClick={copySearchLink}><Icon name="copy" size={17} /><span>{copiedLink ? 'Link copied' : 'Copy link'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
             <p className="description">{getDescription(cve)}</p>
             <div className="data-rail" aria-label="CVE summary">
               <div className="data-point"><span className="data-label">PUBLISHED</span><b>{formatDate(cve.published)}</b></div>
