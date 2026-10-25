@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a problem with PetalPatch.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Please avoid private vulnerability details, credentials, or sensitive target information.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the issue and what you expected to happen.
+      placeholder: A clear summary of the problem
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the steps someone can follow to see the issue.
+      placeholder: |
+        1. Open…
+        2. Search for…
+        3. Notice…
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: e.g. Firefox on Windows 11
+    validations:
+      required: false
+  - type: input
+    id: public-record
+    attributes:
+      label: Public CVE record (optional)
+      description: Share a public record URL only if it helps reproduce the issue.
+      placeholder: https://nvd.nist.gov/vuln/detail/CVE-YYYY-NNNNN
+    validations:
+      required: false
