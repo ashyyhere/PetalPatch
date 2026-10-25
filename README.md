@@ -2,6 +2,8 @@
 
 CVE Atlas is a lightweight vulnerability research workspace. Look up a CVE by ID, or search for a product, organization, or domain to find related NVD records and public reporting.
 
+> A vibe-coded side project I started while busy with other things—the idea was too interesting to leave alone.
+
 The app is built with React, TypeScript, and Vite. It reads public data directly from NVD and GDELT; there is no application server or API key to configure.
 
 ## Features
