@@ -1,29 +1,45 @@
-# CVE Atlas
+# CVE Atlas ✿
 
-CVE Atlas is a lightweight vulnerability research workspace. Look up a CVE by ID, or search for a product, organization, or domain to find related NVD records and public reporting.
+<p align="center">
+  A little research desk for public vulnerability records.<br />
+  Look up a CVE, search a product or domain, and follow the sources.
+</p>
 
-> A vibe-coded side project I started while busy with other things—the idea was too interesting to leave alone.
+<p align="center">
+  <a href="https://github.com/ashyyhere/PetalPatch/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ashyyhere/PetalPatch?style=flat-square&color=9b8bd1" /></a>
+  <a href="https://github.com/ashyyhere/PetalPatch/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/ashyyhere/PetalPatch?style=flat-square&color=79afc3" /></a>
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-6876b8?style=flat-square&logo=react&logoColor=white" />
+  <img alt="Vite 8" src="https://img.shields.io/badge/Vite-8-8a75c7?style=flat-square&logo=vite&logoColor=white" />
+  <img alt="TypeScript 6" src="https://img.shields.io/badge/TypeScript-6-6489bd?style=flat-square&logo=typescript&logoColor=white" />
+</p>
 
-The app is built with React, TypeScript, and Vite. It reads public data directly from NVD and GDELT; there is no application server or API key to configure.
+<p align="center"><a href="#-get-started">Get started</a> · <a href="#-how-it-works">How it works</a> · <a href="#-data--care">Data & care</a> · <a href="#-deployment">Deployment</a></p>
 
-## Features
+## A quick look
 
-- **CVE lookup:** View the vulnerability summary, publication and update dates, reporting source, CVSS assessment, affected products and versions, weakness classifications, and references when these are available in NVD.
-- **Site and product search:** Search NVD by keyword and browse the 20 newest matching CVE records. Selecting a result opens its full report.
-- **Public reporting:** Search GDELT news coverage from the past six months for the same term. News articles can cover disclosures that do not have a CVE record.
-- **Recent lookups:** Keep a short list of recent CVE IDs in the current browser. This history stays in local storage on that device.
-- **Shareable searches:** CVE and site searches are reflected in the URL as `?cve=...` or `?site=...`.
-- **Responsive layout:** Use the research workspace on desktop, tablet, and mobile screens.
+| | Details |
+| --- | --- |
+| **What it is** | A browser based workspace for researching public CVE records and related reporting. |
+| **Built with** | React, TypeScript, and Vite. |
+| **Data** | NVD CVE API and GDELT news search. |
+| **Backend or API key** | None required; the browser requests public data sources directly. |
+| **Search links** | CVE lookups and site searches can be shared through the URL. |
 
-## Data and interpretation
+## ✨ What you can do
 
-CVE Atlas presents source material for research. It does not scan websites, confirm exploitability, or determine where a vulnerability was discovered or attempted.
+| Search | What appears |
+| --- | --- |
+| **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. |
+| **Site, domain, or product** | Up to 20 of the newest NVD keyword matches, plus public news coverage from the past six months when available. |
+| **Recent lookups** | Up to seven CVE IDs saved in this browser, so you can pick up where you left off. |
 
-- An NVD keyword match means the record matched the search term. It does not prove the vulnerability was found or exploited on that domain.
-- A news article is a research lead. Its claims should be checked against the publisher, affected organization, and any linked technical advisory.
-- A reporting source in a CVE record may be an organization or mailbox, not the individual researcher.
-- Discovery domains are shown as unknown unless a source explicitly identifies them. Reference hostnames are shown separately and are not treated as discovery locations.
-- NVD and GDELT are public services and can rate-limit requests or be temporarily unavailable. When broader coverage is unavailable, use the Google or Bing links shown in site-search results.
+## 🌷 How it works
+
+Enter a CVE ID or a search term. CVE Atlas fetches the relevant public records, then gives you a readable report with links back to the sources. Recent CVE IDs stay in this browser; search terms are also written to the URL so a lookup can be shared.
+
+<p align="center">
+  <img src="docs/architecture.svg" alt="Diagram: a CVE ID or site search enters CVE Atlas, which requests records from NVD and reporting from GDELT, then presents a sourced research view. Recent CVE IDs stay in browser storage and searches are shareable in the URL." width="100%" />
+</p>
 
 ## Requirements
 
