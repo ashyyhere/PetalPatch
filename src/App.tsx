@@ -25,7 +25,7 @@ type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: numbe
 
 const HISTORY_KEY = 'cve-atlas-history-v1'
 const THEME_KEY = 'cve-atlas-theme-v1'
-const DEFAULT_CVE = 'CVE-2021-44228'
+const EXAMPLE_CVE = 'CVE-2021-44228'
 const API_ROOT = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
 const UBUNTU_API_ROOT = 'https://ubuntu.com/security/cves'
 
@@ -131,7 +131,7 @@ function App() {
   const [theme, setTheme] = useState<Theme>(readTheme)
   const [input, setInput] = useState(() => {
     const params = new URLSearchParams(window.location.search)
-    return params.get('site') || params.get('cve')?.toUpperCase() || DEFAULT_CVE
+    return params.get('site') || params.get('cve')?.toUpperCase() || ''
   })
   const [cve, setCve] = useState<NvdCve>()
   const [history, setHistory] = useState<Recent[]>(readHistory)
@@ -139,7 +139,7 @@ function App() {
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
-  const [status, setStatus] = useState('Connecting to NVD')
+  const [status, setStatus] = useState('Ready to search')
   const [searchMode, setSearchMode] = useState<'cve' | 'site'>(() => new URLSearchParams(window.location.search).has('site') ? 'site' : 'cve')
   const [siteResults, setSiteResults] = useState<SearchResult[]>([])
   const [newsResults, setNewsResults] = useState<NewsArticle[]>([])
@@ -312,7 +312,7 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.has('site')) void searchSite(params.get('site') || '')
-    else void lookup(input)
+    else if (params.has('cve')) void lookup(params.get('cve') || '')
   }, [])
 
   const score = useMemo(() => cve ? metricFor(cve) : undefined, [cve])
@@ -383,7 +383,7 @@ function App() {
             <p>{searchMode === 'site' ? <>Find CVE records that mention a site or product.<br />A mention does not confirm it was found there.</> : <>Look up the record. Follow its sources.<br />Know what the record leaves out.</>}</p>
           </div>
           <div className="search-modes" role="group" aria-label="Search type">
-            <button type="button" className={searchMode === 'cve' ? 'active' : ''} onClick={() => { setSearchMode('cve'); setError(''); setSiteResults([]); setInput(cve?.id || DEFAULT_CVE) }}>CVE ID</button>
+            <button type="button" className={searchMode === 'cve' ? 'active' : ''} onClick={() => { setSearchMode('cve'); setError(''); setSiteResults([]); setInput(cve?.id || '') }}>CVE ID</button>
             <button type="button" className={searchMode === 'site' ? 'active' : ''} onClick={() => { setSearchMode('site'); setError(''); setCve(undefined); setInput(siteQuery) }}>Site or product</button>
           </div>
           <form className="search-form" onSubmit={submit}>
@@ -391,7 +391,7 @@ function App() {
             {input && <button className="clear-input" type="button" aria-label="Clear search" onClick={() => setInput('')}><Icon name="close" size={17} /></button>}
             <button className="search-button" type="submit" disabled={loading}><span>{loading ? 'Searching' : searchMode === 'site' ? 'Search site' : 'Search CVE'}</span><Icon name={loading ? 'refresh' : 'arrow'} size={17} /></button>
           </form>
-          <div className="search-meta"><span>{searchMode === 'site' ? 'Try' : 'Example'}</span><button type="button" onClick={() => searchMode === 'site' ? (setInput('wordpress.org'), void searchSite('wordpress.org')) : (setInput('CVE-2021-44228'), void lookup('CVE-2021-44228'))}>{searchMode === 'site' ? 'wordpress.org' : 'CVE-2021-44228'} <Icon name="arrow" size={13} /></button><span className="meta-divider" /><span>Source: NIST National Vulnerability Database</span></div>
+          <div className="search-meta"><span>{searchMode === 'site' ? 'Try' : 'Example'}</span><button type="button" onClick={() => searchMode === 'site' ? (setInput('wordpress.org'), void searchSite('wordpress.org')) : (setInput(EXAMPLE_CVE), void lookup(EXAMPLE_CVE))}>{searchMode === 'site' ? 'wordpress.org' : EXAMPLE_CVE} <Icon name="arrow" size={13} /></button><span className="meta-divider" /><span>Source: NIST National Vulnerability Database</span></div>
         </section>
 
         {error && <div className="error-banner" role="alert"><span className="error-glyph">!</span><span>{error}</span><button type="button" onClick={() => searchMode === 'site' ? void searchSite(input) : void lookup(input)}>Try again</button></div>}
