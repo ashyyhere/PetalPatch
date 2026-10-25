@@ -41,12 +41,6 @@
 .crumb-current { color: #44567f; }
 .topbar-status { display: flex; align-items: center; gap: 8px; color: #667899; font-size: 10px; }
 .topbar-actions { display: flex; align-items: center; gap: 18px; }
-.mood-toggle { display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 1px solid var(--line); color: var(--muted); background: var(--paper); font-size: 10px; text-transform: capitalize; cursor: pointer; transition: color .18s ease, border-color .18s ease, background-color .18s ease; }
-.mood-toggle:hover { color: var(--ink); border-color: var(--green); }
-.mood-swatch { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px var(--line); }
-.mood-swatch-lilac { background: linear-gradient(135deg, #8e83cf 0 50%, #78b9d2 50%); }
-.mood-swatch-sakura { background: linear-gradient(135deg, #ce829f 0 50%, #e7b9c9 50%); }
-.mood-swatch-mint { background: linear-gradient(135deg, #579eaa 0 50%, #a4d3c8 50%); }
 .theme-toggle { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--line); color: var(--muted); background: var(--paper); font-size: 10px; cursor: pointer; transition: color .18s ease, border-color .18s ease, background-color .18s ease; }
 .theme-toggle:hover { color: var(--ink); border-color: var(--green); }
 .theme-bloom * { transition: color .38s ease, background-color .42s ease, border-color .42s ease, box-shadow .42s ease !important; }
@@ -259,14 +253,6 @@
 :root[data-theme='dark'] .topbar { border-color: #343d55; }
 :root[data-theme='dark'] .search-zone { border-color: #343d55; background: linear-gradient(112deg, rgba(34,40,59,.96), rgba(31,38,59,.9) 57%, rgba(47,43,72,.74)); }
 :root[data-theme='dark'] .search-zone::before { background: radial-gradient(circle, rgba(130,120,207,.25) 0 9%, rgba(99,169,197,.16) 10% 24%, rgba(203,127,160,.12) 25% 36%, transparent 65%); }
-:root[data-mood='sakura'] .search-zone { background: linear-gradient(112deg, rgba(255,252,253,.68), rgba(251,239,247,.58) 57%, rgba(247,231,243,.68)); }
-:root[data-mood='sakura'] .search-zone::before { background: radial-gradient(circle, rgba(244,195,215,.6) 0 9%, rgba(231,215,245,.4) 10% 24%, rgba(247,218,230,.34) 25% 36%, transparent 65%); }
-:root[data-mood='mint'] .search-zone { background: linear-gradient(112deg, rgba(250,255,254,.68), rgba(232,247,246,.58) 57%, rgba(226,241,247,.68)); }
-:root[data-mood='mint'] .search-zone::before { background: radial-gradient(circle, rgba(164,215,206,.56) 0 9%, rgba(183,220,237,.4) 10% 24%, rgba(220,234,244,.34) 25% 36%, transparent 65%); }
-:root[data-theme='dark'][data-mood='sakura'] .search-zone { background: linear-gradient(112deg, rgba(48,38,55,.96), rgba(45,37,57,.9) 57%, rgba(59,40,58,.78)); }
-:root[data-theme='dark'][data-mood='sakura'] .search-zone::before { background: radial-gradient(circle, rgba(198,122,159,.25) 0 9%, rgba(151,129,192,.18) 10% 24%, rgba(191,117,153,.12) 25% 36%, transparent 65%); }
-:root[data-theme='dark'][data-mood='mint'] .search-zone { background: linear-gradient(112deg, rgba(34,47,57,.96), rgba(31,45,56,.9) 57%, rgba(36,52,62,.78)); }
-:root[data-theme='dark'][data-mood='mint'] .search-zone::before { background: radial-gradient(circle, rgba(93,157,153,.24) 0 9%, rgba(92,143,174,.17) 10% 24%, rgba(122,168,177,.12) 25% 36%, transparent 65%); }
 :root[data-theme='dark'] .search-zone::after { opacity: .34; }
 :root[data-theme='dark'] .search-form { border-color: #4a5570; background: rgba(25,31,47,.95); box-shadow: 0 8px 24px rgba(0,0,0,.16); }
 :root[data-theme='dark'] .search-form:focus-within { border-color: #a69be9; box-shadow: 0 0 0 3px rgba(166,155,233,.18), 0 8px 24px rgba(0,0,0,.2); }
@@ -412,8 +398,6 @@
   .topbar { height: 53px; }
   .topbar-status { font-size: 9px; }
   .topbar-actions { gap: 9px; }
-  .mood-toggle { width: 28px; justify-content: center; gap: 5px; padding: 6px; font-size: 9px; }
-  .mood-name { display: none; }
   .theme-toggle { gap: 5px; padding: 6px 7px; font-size: 9px; }
   .search-zone { padding: 27px 16px 19px; }
   .search-zone::before { top: -150px; right: -42%; }
