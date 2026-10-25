@@ -26,11 +26,22 @@ type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: numbe
 const constellationPoints = [{ x: 38, y: 34 }, { x: 108, y: 19 }, { x: 220, y: 27 }, { x: 282, y: 67 }, { x: 224, y: 122 }, { x: 82, y: 119 }]
 const HISTORY_KEY = 'cve-atlas-history-v1'
 const THEME_KEY = 'cve-atlas-theme-v1'
+const MOOD_KEY = 'petalpatch-color-mood-v1'
 const EXAMPLE_CVE = 'CVE-2021-44228'
 const API_ROOT = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
 const UBUNTU_API_ROOT = 'https://ubuntu.com/security/cves'
 
 type Theme = 'light' | 'dark'
+type Mood = 'lilac' | 'sakura' | 'mint'
+const moods: Mood[] = ['lilac', 'sakura', 'mint']
+
+function readMood(): Mood {
+  try {
+    const saved = localStorage.getItem(MOOD_KEY)
+    if (saved === 'lilac' || saved === 'sakura' || saved === 'mint') return saved
+  } catch { /* Keep the default palette when storage is unavailable. */ }
+  return 'lilac'
+}
 
 function readTheme(): Theme {
   try {
@@ -130,6 +141,7 @@ function uniqueReferenceHosts(cve: NvdCve) {
 
 function App() {
   const [theme, setTheme] = useState<Theme>(readTheme)
+  const [mood, setMood] = useState<Mood>(readMood)
   const themeTimer = useRef<number | undefined>(undefined)
   const [input, setInput] = useState(() => {
     const params = new URLSearchParams(window.location.search)
@@ -159,6 +171,11 @@ function App() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#141827' : '#edf4fa')
     try { localStorage.setItem(THEME_KEY, theme) } catch { /* Theme still applies for this session. */ }
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.dataset.mood = mood
+    try { localStorage.setItem(MOOD_KEY, mood) } catch { /* Mood still applies for this session. */ }
+  }, [mood])
 
   const lookup = useCallback(async (rawId: string) => {
     const generation = ++lookupGeneration.current
@@ -366,6 +383,8 @@ function App() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
+  const cycleMood = () => setMood((current) => moods[(moods.indexOf(current) + 1) % moods.length])
+
   return (
     <div className="app-shell">
       <aside className="history-rail" aria-label="Recent CVE lookups">
@@ -389,7 +408,7 @@ function App() {
       <main className="workspace">
         <header className="topbar">
           <div className="breadcrumbs"><span>Research</span><span className="crumb-slash">/</span><span className="crumb-current">{searchMode === 'site' ? 'Site search' : 'CVE lookup'}</span></div>
-          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="theme-toggle" type="button" onClick={switchTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
+          <div className="topbar-actions"><div className="topbar-status"><span className={`status-mark ${loading ? 'is-loading' : error ? 'is-error' : 'is-ready'}`} />{status}</div><button className="mood-toggle" type="button" onClick={cycleMood} aria-label={`Color mood: ${mood}. Switch to ${moods[(moods.indexOf(mood) + 1) % moods.length]}`} title={`Color mood: ${mood}. Click to change`}><span className={`mood-swatch mood-swatch-${mood}`} aria-hidden="true" /><span className="mood-name">{mood}</span></button><button className="theme-toggle" type="button" onClick={switchTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}><Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} /><span>{theme === 'dark' ? 'Light' : 'Dark'}</span></button></div>
         </header>
 
         <section className="search-zone" aria-labelledby="page-title">
