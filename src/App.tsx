@@ -24,7 +24,6 @@ type UbuntuPackage = { name: string; statuses?: { release_codename: string; stat
 type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: number; updated_at?: string; ubuntu_description?: string; notices_ids?: string[]; packages?: UbuntuPackage[] }
 type ExternalDatabase = { name: string; detail: string; url: string }
 
-const constellationPoints = [{ x: 38, y: 34 }, { x: 108, y: 19 }, { x: 220, y: 27 }, { x: 282, y: 67 }, { x: 224, y: 122 }, { x: 82, y: 119 }]
 const HISTORY_KEY = 'cve-atlas-history-v1'
 const THEME_KEY = 'cve-atlas-theme-v1'
 const EXAMPLE_CVE = 'CVE-2021-44228'
@@ -166,7 +165,7 @@ function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#141827' : '#edf4fa')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#111210' : '#ffffff')
     try { localStorage.setItem(THEME_KEY, theme) } catch { /* Theme still applies for this session. */ }
   }, [theme])
 
@@ -410,7 +409,7 @@ function App() {
 
         <section className="search-zone" aria-labelledby="page-title">
           <div className="search-heading">
-            <div className="heading-rail"><span className="rail-overline">PUBLIC VULNERABILITY RECORDS</span><h1 id="page-title">{searchMode === 'site' ? 'Search by site.' : 'Find a CVE.'}</h1></div>
+            <div className="heading-copy"><h1 id="page-title">{searchMode === 'site' ? 'Search by site.' : 'Find a CVE.'}</h1></div>
             <p>{searchMode === 'site' ? <>Find CVE records that mention a site or product.<br />A mention does not confirm it was found there.</> : <>Look up the record. Follow its sources.<br />Know what the record leaves out.</>}</p>
           </div>
           <div className="search-modes" role="group" aria-label="Search type">
@@ -431,7 +430,7 @@ function App() {
         {loading && searchMode === 'site' && <section className="loading-state" aria-live="polite"><div className="loading-rail"><span /></div><p>Searching NVD for matching CVE records…</p></section>}
 
         {searchMode === 'site' && !loading && !error && <section className="site-results" aria-live="polite">
-          <div className="site-results-heading"><div><span className="rail-overline">NVD KEYWORD MATCHES</span><h2>{siteQuery ? `Results for “${siteQuery}”` : 'Search a site or product'}</h2></div>{siteQuery && <span className="site-total">{siteTotal.toLocaleString()} public records</span>}</div>
+          <div className="site-results-heading"><div><h2>{siteQuery ? `Results for “${siteQuery}”` : 'Search a site or product'}</h2></div>{siteQuery && <span className="site-total">{siteTotal.toLocaleString()} public records</span>}</div>
           {siteQuery && <p className="match-disclaimer">These records mention your search term in NVD searchable content. They do not prove the vulnerability was discovered, attempted, or exploited on that domain.</p>}
           {siteQuery && siteResults.length === 0 && <div className="no-match-note"><p><b>No NVD CVE records matched this term.</b> That only means NVD returned no matching CVE records. A website-specific security disclosure may be published without a CVE ID, or indexed elsewhere.</p><div className="web-search-links"><span>Search public reporting</span><a href={googleDisclosureUrl} target="_blank" rel="noreferrer">Google <Icon name="external" size={13} /></a><a href={bingDisclosureUrl} target="_blank" rel="noreferrer">Bing <Icon name="external" size={13} /></a></div></div>}
           {siteResults.map(({ cve: record }) => {
@@ -442,15 +441,14 @@ function App() {
             </button>
           })}
           {siteTotal > siteResults.length && <p className="result-cap">Showing the newest {siteResults.length} matches from {siteTotal.toLocaleString()}. Refine the term for a narrower search.</p>}
-          {siteQuery && <div className="coverage-section"><div className="site-results-heading coverage-heading"><div><span className="rail-overline">INDEPENDENT NEWS INDEX</span><h2>Public reporting</h2></div><span className="site-total">GDELT · Past 6 months</span></div><p className="match-disclaimer">News articles can describe disclosures without a CVE ID. Coverage is a lead for research, not validation of the claims.</p>{newsUnavailable && <p className="section-empty">The news index is temporarily unavailable. Search the wider web below.</p>}{!newsUnavailable && newsResults.length === 0 && <p className="section-empty">No matching news coverage found in this index.</p>}{newsResults.map((article) => <a className="news-result-row" key={article.url} href={article.url} target="_blank" rel="noreferrer"><span className="result-main"><b>{article.title}</b><span>{article.domain} · {formatNewsDate(article.seendate)}</span></span><Icon name="external" size={15} /></a>)}{siteResults.length > 0 && <div className="web-search-links"><span>Search wider coverage</span><a href={googleDisclosureUrl} target="_blank" rel="noreferrer">Google <Icon name="external" size={13} /></a><a href={bingDisclosureUrl} target="_blank" rel="noreferrer">Bing <Icon name="external" size={13} /></a></div>}</div>}
+          {siteQuery && <div className="coverage-section"><div className="site-results-heading coverage-heading"><div><h2>Public reporting</h2></div><span className="site-total">GDELT · Past 6 months</span></div><p className="match-disclaimer">News articles can describe disclosures without a CVE ID. Coverage is a lead for research, not validation of the claims.</p>{newsUnavailable && <p className="section-empty">The news index is temporarily unavailable. Search the wider web below.</p>}{!newsUnavailable && newsResults.length === 0 && <p className="section-empty">No matching news coverage found in this index.</p>}{newsResults.map((article) => <a className="news-result-row" key={article.url} href={article.url} target="_blank" rel="noreferrer"><span className="result-main"><b>{article.title}</b><span>{article.domain} · {formatNewsDate(article.seendate)}</span></span><Icon name="external" size={15} /></a>)}{siteResults.length > 0 && <div className="web-search-links"><span>Search wider coverage</span><a href={googleDisclosureUrl} target="_blank" rel="noreferrer">Google <Icon name="external" size={13} /></a><a href={bingDisclosureUrl} target="_blank" rel="noreferrer">Bing <Icon name="external" size={13} /></a></div>}</div>}
         </section>}
 
         {!loading && !cve && !error && searchMode === 'cve' && <section className="empty-report"><div className="empty-index">— — —</div><h2>Start with a CVE ID</h2><p>Enter an identifier above to open its public record and supporting references.</p></section>}
 
         {cve && <article className="report" aria-label={`Report for ${cve.id}`}>
           <div className="report-main">
-            <div className="report-kicker"><span className="live-dot" /> NVD record <span className="kicker-rule" /> {cve.vulnStatus || 'Status not provided'}</div>
-            <div className="report-title-row"><div className="report-identity"><h2>{cve.id}</h2>{score && <span className={`severity-stamp severity-${score.baseSeverity.toLowerCase()}`}><span className="stamp-label">CVSS {score.version}</span>{score.baseSeverity} <b>{score.baseScore.toFixed(1)}</b></span>}</div><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><button className="icon-button" title={copiedLink ? 'Copied search link' : 'Copy search link'} aria-label={copiedLink ? 'Copied search link' : 'Copy search link'} onClick={copySearchLink}><Icon name="copy" size={17} /><span>{copiedLink ? 'Link copied' : 'Copy link'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
+            <div className="report-title-row"><div className="report-identity"><h2>{cve.id}</h2>{score && <span className={`severity-stamp severity-${score.baseSeverity.toLowerCase()}`}><span className="stamp-label">CVSS {score.version}</span>{score.baseSeverity} <b>{score.baseScore.toFixed(1)}</b></span>}{cve.vulnStatus && <span className="record-state">{cve.vulnStatus}</span>}</div><div className="report-actions"><button className="icon-button" title={copied ? 'Copied' : 'Copy CVE ID'} aria-label={copied ? 'Copied CVE ID' : 'Copy CVE ID'} onClick={copyId}><Icon name="copy" size={17} /><span>{copied ? 'Copied' : 'Copy ID'}</span></button><button className="icon-button" title={copiedLink ? 'Copied search link' : 'Copy search link'} aria-label={copiedLink ? 'Copied search link' : 'Copy search link'} onClick={copySearchLink}><Icon name="copy" size={17} /><span>{copiedLink ? 'Link copied' : 'Copy link'}</span></button><a className="source-link" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Open NVD <Icon name="external" size={15} /></a></div></div>
             <p className="description">{getDescription(cve)}</p>
             <div className="data-rail" aria-label="CVE summary">
               <div className="data-point"><span className="data-label">PUBLISHED</span><b>{formatDate(cve.published)}</b></div>
@@ -501,19 +499,6 @@ function App() {
             </section>
             <section className="side-block references-block">
               <div className="side-label"><span className="side-line side-line-dim" /> SOURCE REFERENCES <span className="ref-count">{(cve.references || []).length.toString().padStart(2, '0')}</span></div>
-              {!!cve.references?.length && <svg className="source-constellation" viewBox="0 0 320 150" role="group" aria-label="Reference links arranged around the NVD record">
-                <g className="constellation-lines" aria-hidden="true">{cve.references.slice(0, 6).map((_, index) => {
-                  const point = constellationPoints[index]
-                  return point && <line key={index} x1="160" y1="72" x2={point.x} y2={point.y} />
-                })}</g>
-                <circle className="constellation-core" cx="160" cy="72" r="17" aria-hidden="true" /><text className="constellation-core-label" x="160" y="76" textAnchor="middle">NVD</text>
-                {cve.references.slice(0, 6).map((reference, index) => {
-                  const point = constellationPoints[index]
-                  return point && <a key={`${reference.url}-${index}`} href={reference.url} target="_blank" rel="noreferrer" aria-label={`Open source reference ${index + 1}: ${(reference.tags || []).find((tag) => tag !== 'Third Party Advisory') || reference.url}`}>
-                    <circle className="constellation-node" cx={point.x} cy={point.y} r="11" /><text className="constellation-number" x={point.x} y={point.y + 3.5} textAnchor="middle">{index + 1}</text>
-                  </a>
-                })}
-              </svg>}
               {(cve.references || []).slice(0, 6).map((reference, index) => <a className="reference-link" href={reference.url} target="_blank" rel="noreferrer" key={`${reference.url}-${index}`}><span>{(reference.tags || []).find((tag) => tag !== 'Third Party Advisory') || 'Reference'}</span><Icon name="external" size={13} /></a>)}
               {!(cve.references || []).length && <p className="side-empty">No references listed.</p>}
               {(cve.references || []).length > 6 && <a className="all-references" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">View all {cve.references?.length} references <Icon name="arrow" size={13} /></a>}

@@ -1,65 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
 :root {
   color-scheme: light;
-  font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
-  color: #18254a;
-  background: #edf4fa;
+  font-family: 'DM Sans', sans-serif;
+  color: #171717;
+  background: #fff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
   font-weight: 400;
-  --canvas: #edf4fa;
-  --paper: #fbfcff;
-  --paper-blue: #f4f8fe;
-  --panel: #e4edf8;
-  --line: #cbd7e8;
-  --line-soft: #dce5f0;
-  --ink: #18254a;
-  --muted: #536487;
-  --faint: #7c8baa;
-  --green: #8278cf;
-  --red: #b46381;
-  --blue: #63a9c5;
-  --lilac: #bdb5eb;
-  --rose: #edc8d8;
-  --focus: #746ac5;
-  --surface-raised: #ffffff;
-  --surface-subtle: #f4f8fe;
-  --mono: 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
-  --display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --canvas: #fff;
+  --paper: #fff;
+  --paper-blue: #f7f7f5;
+  --panel: #f3f3f0;
+  --line: #deded9;
+  --line-soft: #e9e9e5;
+  --ink: #171717;
+  --muted: #5f605d;
+  --faint: #70716d;
+  --green: #5645a3;
+  --red: #ad3e50;
+  --blue: #417c8d;
+  --lilac: #a79bd8;
+  --rose: #dfb3bc;
+  --focus: #6956b8;
+  --surface-raised: #fff;
+  --surface-subtle: #f7f7f5;
+  --selection: #e5defa;
+  --severity-high: #963440;
+  --severity-high-bg: #fbf1f1;
+  --severity-medium: #785714;
+  --severity-medium-bg: #faf6ea;
+  --severity-low: #2d6c7c;
+  --severity-low-bg: #eef6f7;
+  --error: #873743;
+  --error-line: #d6aab0;
+  --mono: 'DM Mono', 'Cascadia Code', Consolas, monospace;
+  --display: 'Newsreader', Georgia, serif;
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  background: #141827;
-  --canvas: #141827;
-  --paper: #1c2132;
-  --paper-blue: #20263a;
-  --panel: #252c41;
-  --line: #414a63;
-  --line-soft: #343d55;
-  --ink: #edf0fb;
-  --muted: #c0c9df;
-  --faint: #a1adc9;
-  --green: #b8aff2;
-  --red: #e9a5be;
-  --blue: #8acbe0;
+  background: #111210;
+  --canvas: #111210;
+  --paper: #171815;
+  --paper-blue: #1d1e1a;
+  --panel: #242520;
+  --line: #393a34;
+  --line-soft: #2b2c27;
+  --ink: #eeeee8;
+  --muted: #c0c1b9;
+  --faint: #9a9b93;
+  --green: #b7aaff;
+  --red: #ee9aa7;
+  --blue: #91cad7;
   --lilac: #aaa0e8;
-  --rose: #dd9ab6;
-  --focus: #b8aff2;
-  --surface-raised: #20263a;
-  --surface-subtle: #252c41;
+  --rose: #dda0ad;
+  --focus: #b7aaff;
+  --surface-raised: #1c1d19;
+  --surface-subtle: #20211c;
+  --selection: #493c6d;
+  --severity-high: #f0a0a8;
+  --severity-high-bg: #332023;
+  --severity-medium: #e5c277;
+  --severity-medium-bg: #302a1b;
+  --severity-low: #93cbd8;
+  --severity-low-bg: #1a2a2d;
+  --error: #f1a1a7;
+  --error-line: #75434a;
 }
 
 * { box-sizing: border-box; }
-html { min-width: 320px; min-height: 100%; background: var(--canvas); }
-body { min-width: 320px; min-height: 100vh; margin: 0; }
+html { min-width: 320px; min-height: 100%; background: var(--canvas); scroll-behavior: smooth; }
+body { min-width: 320px; min-height: 100vh; margin: 0; background: var(--canvas); }
 button, input { font: inherit; }
 button { color: inherit; }
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 a { color: inherit; }
-::selection { color: var(--ink); background: rgba(130,120,207,.32); }
+::selection { color: var(--ink); background: var(--selection); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--canvas); }
 ::-webkit-scrollbar-thumb { background: var(--line); border: 3px solid var(--canvas); border-radius: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
