@@ -78,16 +78,16 @@ Open the local address printed by Vite. No environment variables or API keys are
 
 ## ☁️ Deployment
 
-For **Cloudflare Pages**, connect this repository and set:
+This repository is set up for **Cloudflare Workers Builds** with static assets. Connect it to the `petalpatch` Worker and use:
 
 | Setting | Value |
 | --- | --- |
 | Production branch | `main` |
-| Framework preset | `Vite` |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | `/` (repository root) |
 
-The editable `public/404.html` is copied to `dist/404.html` for Cloudflare Pages. The app’s searches use query strings (for example, `/?cve=CVE-2021-44228`), so the custom 404 page does not interrupt those links. If you add client-side routes later, revisit the fallback behavior.
+`wrangler.jsonc` points the Worker at Vite’s `dist/` output and enables the custom `404.html` page for unknown paths. CVE Atlas searches use query strings (for example, `/?cve=CVE-2021-44228`), which continue to work from the home page. If you add client-side routes later, revisit the not-found behavior.
 
 ## 🗂️ Project map
 
@@ -98,6 +98,7 @@ The editable `public/404.html` is copied to `dist/404.html` for Cloudflare Pages
 | `src/index.css` | Global styles and design tokens. |
 | `public/` | Static assets and the editable 404 page. |
 | `docs/architecture.svg` | The small “how it works” diagram above. |
+| `wrangler.jsonc` | Cloudflare Worker name, asset directory, and 404 behavior. |
 
 ## 🌱 Contributing
 
