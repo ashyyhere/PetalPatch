@@ -1,0 +1,33 @@
+name: Feature idea
+description: Suggest a thoughtful improvement for PetalPatch.
+title: "[Idea]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Keep suggestions focused on public vulnerability research. Please do not include private vulnerability details or sensitive target information.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Describe the research task or difficulty.
+      placeholder: I want to…
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would help?
+      description: Explain the change you have in mind. A sketch or example is welcome.
+      placeholder: It would help if PetalPatch…
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Other approaches considered
+      description: Optional context about alternatives or tradeoffs.
+      placeholder: Optional
+    validations:
+      required: false
