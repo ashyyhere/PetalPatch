@@ -181,6 +181,9 @@
 .page-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 15px 0 0; color: #7d8aa6; font-size: 9px; }
 .page-footer div { display: flex; align-items: center; gap: 7px; color: #5c7096; }
 .page-footer svg { color: #7d7bc0; }
+.footer-credit { margin-left: 9px; white-space: nowrap; }
+.footer-credit a { color: #5b549d; text-decoration: underline; text-decoration-color: #c3bee4; text-underline-offset: 2px; }
+.footer-credit a:hover { color: #39377b; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 @media (min-width: 1500px) {

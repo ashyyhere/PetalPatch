@@ -390,7 +390,7 @@ function App() {
           </aside>
         </article>}
 
-        <footer className="page-footer"><div><Icon name="shield" size={15} /><span>Public source data. Verify before acting.</span></div><span>Record fields reflect what NVD provides; missing details stay unfilled.</span></footer>
+        <footer className="page-footer"><div><Icon name="shield" size={15} /><span>Public source data. Verify before acting.</span></div><span>Record fields reflect what NVD provides; missing details stay unfilled.<span className="footer-credit">Made by <a href="https://github.com/ashyyhere" target="_blank" rel="noreferrer">ashyyhere</a> with &lt;3</span></span></footer>
       </main>
     </div>
   )
