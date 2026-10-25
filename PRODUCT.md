@@ -27,6 +27,8 @@ Accept a CVE identifier or a site, domain, or product search term. Show a clear 
 - Treat news coverage as a research lead, show its publisher and date, and do not present allegations as verified technical facts.
 - Make the reporting source and record publication date visible when the source provides them.
 - Show affected products and versions when available.
+- Surface only CVE references that NVD tags as exploit or vendor/advisory sources for reproduction research; label them as unverified links and never generate unsupported CVE-specific steps.
+- Frame reproduction guidance around matching an affected version in a disposable, isolated lab and following the linked source's own validation steps.
 - Exact discovery or attempted-attack domains are not reliably part of a CVE record. Do not infer them from the affected product; label this information unavailable unless a cited source explicitly provides it.
 - Display data provenance and link to the authoritative source record.
 

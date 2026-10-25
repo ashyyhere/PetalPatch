@@ -18,6 +18,7 @@ type NvdCve = {
 }
 
 type Product = { vendor: string; name: string; versions: string[] }
+type ReproductionSource = { url: string; host: string; kind: 'PoC reference' | 'Advisory' }
 type Recent = { id: string; description: string; date: string }
 type SearchResult = { cve: NvdCve }
 type NewsArticle = { url: string; title: string; seendate: string; domain: string; language?: string }
@@ -355,6 +356,16 @@ function App() {
   const visibleProducts = useMemo(() => activeVendor === 'All vendors' ? productGroups : productGroups.filter((product) => product.vendor === activeVendor), [activeVendor, productGroups])
   const weaknesses = useMemo(() => [...new Set((cve?.weaknesses || []).flatMap((item) => (item.description || []).filter((entry) => entry.lang === 'en').map((entry) => entry.value)))], [cve])
   const referenceHosts = useMemo(() => cve ? uniqueReferenceHosts(cve) : [], [cve])
+  const reproductionSources = useMemo<ReproductionSource[]>(() => (cve?.references || []).flatMap((reference) => {
+    const tags = reference.tags || []
+    const hasExploitTag = tags.some((tag) => tag.toLowerCase() === 'exploit')
+    const hasAdvisoryTag = tags.some((tag) => ['vendor advisory', 'third party advisory'].includes(tag.toLowerCase()))
+    if (!hasExploitTag && !hasAdvisoryTag) return []
+    const kind: ReproductionSource['kind'] = hasExploitTag ? 'PoC reference' : 'Advisory'
+    let host = reference.url
+    try { host = new URL(reference.url).hostname.replace(/^www\./, '') } catch { /* Keep the source URL readable if it is not a valid URL. */ }
+    return [{ url: reference.url, host, kind }]
+  }).slice(0, 5), [cve])
   const externalDatabases = useMemo(() => cve ? externalDatabasesFor(cve.id) : [], [cve?.id])
   const disclosureQuery = siteQuery ? `"${siteQuery}" (vulnerability OR "security flaw" OR breach OR CVE)` : ''
   const googleDisclosureUrl = disclosureQuery ? `https://www.google.com/search?q=${encodeURIComponent(disclosureQuery)}` : ''
@@ -530,6 +541,14 @@ function App() {
                   </> : <p className="section-empty">No products match “{productFilter}” for this vendor.</p>}
                 </> : <p className="section-empty">No products match “{productFilter}”.</p>}
               </> : <p className="section-empty">No affected product details are listed in this NVD record.</p>}
+            </section>
+
+            <section className="report-section reproduction-section">
+              <div className="section-title"><span className="section-rail" /><h3>Reproduce in a lab</h3><span className="repro-source-count">{reproductionSources.length ? `${reproductionSources.length} sourced links` : 'source-led'}</span></div>
+              <p className="reproduction-note">Use a disposable, isolated environment and a listed affected version. Follow the setup and verification steps in a source below; never test a public or third-party system.</p>
+              <div className="reproduction-steps" aria-label="Safe lab workflow"><span><b>01</b> Match product and version</span><span><b>02</b> Isolate a disposable lab</span><span><b>03</b> Verify using the source guide</span></div>
+              {reproductionSources.length ? <div className="reproduction-sources" aria-label="NVD-tagged reproduction sources">{reproductionSources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.kind}</b><small>{source.host}</small></span><Icon name="external" size={13} /></a>)}</div> : <p className="section-empty">NVD has no exploit or advisory-tagged reference for this CVE. <a href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">Review the full source record</a>.</p>}
+              <small className="reproduction-caveat">References are tagged by NVD; PetalPatch does not validate proof-of-concept code.</small>
             </section>
 
             <section className="report-section">

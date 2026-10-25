@@ -175,6 +175,21 @@
 .product-expand.is-expanded svg { transform: rotate(180deg); }
 .product-expand:hover { text-decoration: underline; text-underline-offset: 3px; }
 .product-expand:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.reproduction-section { padding-top: 18px; border-top: 1px solid var(--line); }
+.repro-source-count { margin-left: auto; color: var(--faint); font: 8px var(--mono); }
+.reproduction-note { max-width: 72ch; margin: 0 0 13px; color: var(--muted); font-size: 10px; line-height: 1.65; }
+.reproduction-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 13px; }
+.reproduction-steps span { display: flex; align-items: baseline; gap: 7px; padding-top: 7px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 8px; line-height: 1.5; }
+.reproduction-steps b { flex: 0 0 auto; color: var(--green); font: 8px var(--mono); }
+.reproduction-sources { display: grid; border-top: 1px solid var(--line); }
+.reproduction-sources a { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 1px; border-bottom: 1px solid var(--line-soft); color: var(--muted); text-decoration: none; }
+.reproduction-sources a > span { min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.reproduction-sources b { flex: 0 0 auto; color: var(--ink); font-size: 9px; font-weight: 600; }
+.reproduction-sources small { overflow: hidden; color: var(--muted); font: 8px var(--mono); text-overflow: ellipsis; white-space: nowrap; }
+.reproduction-sources a > svg { flex: 0 0 auto; }
+.reproduction-sources a:hover b { color: var(--green); }
+.reproduction-sources a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.reproduction-caveat { display: block; margin-top: 9px; color: var(--faint); font-size: 8px; line-height: 1.5; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .weakness-tag { padding: 4px 0; border: 0; border-bottom: 1px solid var(--line); color: var(--muted); background: transparent; font: 9px var(--mono); }
 .ubuntu-section { padding-top: 21px; border-top: 1px solid var(--line); }
@@ -297,6 +312,7 @@
   .vendor-rail { gap: 15px; }
   .product-catalog { grid-template-columns: minmax(0, 1fr); }
   .product-entry, .product-entry:nth-child(2n) { padding: 9px 0; border-left: 0; }
+  .reproduction-steps { grid-template-columns: minmax(0, 1fr); gap: 5px; }
   .ubuntu-section .section-title { gap: 6px; }
   .ubuntu-preview-label { margin-left: auto; }
   .ubuntu-record-link { flex-basis: 100%; }
