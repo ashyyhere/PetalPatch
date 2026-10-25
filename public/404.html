@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#edf4fa" />
+    <meta name="robots" content="noindex" />
+    <title>404 — Page not found · CVE Atlas</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+        color: #18254a;
+        background: #edf4fa;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        --ink: #18254a;
+        --muted: #536487;
+        --line: #dce5f0;
+        --paper: #fbfcff;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        display: grid;
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        padding: 28px;
+        background:
+          radial-gradient(ellipse at 83% 15%, rgb(189 181 235 / 27%), transparent 34rem),
+          radial-gradient(ellipse at 12% 88%, rgb(237 200 216 / 24%), transparent 30rem),
+          #edf4fa;
+      }
+
+      main {
+        position: relative;
+        width: min(100%, 660px);
+        overflow: hidden;
+        padding: clamp(32px, 8vw, 72px);
+        border: 1px solid rgb(203 215 232 / 78%);
+        border-radius: 28px;
+        background: rgb(251 252 255 / 88%);
+        box-shadow: 0 24px 80px rgb(35 49 89 / 9%);
+        animation: arrive 650ms cubic-bezier(.2, .75, .25, 1) both;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .mark {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid #dedaf4;
+        border-radius: 10px;
+        background: #f1effb;
+        color: #746ac5;
+        font-family: Georgia, serif;
+        font-size: 18px;
+      }
+
+      .code {
+        margin: 44px 0 8px;
+        color: #b5addf;
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+        font-size: clamp(72px, 18vw, 112px);
+        letter-spacing: -.09em;
+        line-height: .9;
+      }
+
+      h1 {
+        margin: 24px 0 12px;
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+        font-size: clamp(30px, 6vw, 42px);
+        font-weight: 500;
+        letter-spacing: -.04em;
+      }
+
+      p { max-width: 440px; margin: 0; color: var(--muted); line-height: 1.75; }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+      a {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+        border: 1px solid #cbd7e8;
+        border-radius: 13px;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 650;
+        text-decoration: none;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+      a.primary { border-color: #746ac5; background: #746ac5; color: white; }
+      a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgb(35 49 89 / 12%); }
+      a:focus-visible { outline: 3px solid #63a9c5; outline-offset: 3px; }
+
+      .footnote { margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; }
+      @keyframes arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow"><span class="mark" aria-hidden="true">✳</span> CVE Atlas · Research workspace</div>
+      <div class="code" aria-hidden="true">404</div>
+      <h1>This page slipped off the map.</h1>
+      <p>The link may be mistyped, outdated, or pointing to a page that moved. Your research is still safe—head back to the Atlas and start a fresh lookup.</p>
+      <div class="actions">
+        <a class="primary" href="/">Back to CVE Atlas <span aria-hidden="true">&nbsp;↗</span></a>
+        <a href="javascript:history.back()">Go back</a>
+      </div>
+      <p class="footnote">Looking for a report? Search by CVE ID, product, organization, or domain from the home page.</p>
+    </main>
+  </body>
+</html>

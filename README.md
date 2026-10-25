@@ -39,6 +39,19 @@ npm run dev
 
 Run these commands from the repository root, then open the local URL printed by Vite. No environment variables or API keys are required.
 
+## Deploy to Cloudflare Pages
+
+Connect this GitHub repository to Cloudflare Pages and use these build settings:
+
+| Setting | Value |
+| --- | --- |
+| Production branch | `main` |
+| Framework preset | `Vite` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+
+Vite copies files from `public/` into the root of `dist/`. The included `public/404.html` becomes `dist/404.html`, so Cloudflare Pages can show the custom page when someone opens an unknown URL. CVE Atlas uses query-string searches (such as `/?cve=CVE-2021-44228`), which continue to work from the home page. If client-side routes are added later, configure their fallback behavior alongside the custom 404 page.
+
 ## Available scripts
 
 | Command | Description |
@@ -60,7 +73,7 @@ src/
   App.tsx       Search flows, API calls, and CVE report components
   App.css       Workspace layout and component styling
   index.css     Global styles and design tokens
-public/         Static app assets
+public/         Static assets and the editable Cloudflare Pages 404 page
 ```
 
 ## License
