@@ -21,7 +21,7 @@
 | --- | --- |
 | **What it is** | A browser based workspace for researching public CVE records and related reporting. |
 | **Built with** | React, TypeScript, and Vite. |
-| **Data** | NVD CVE API, Ubuntu Security Tracker, and GDELT news search. |
+| **Data** | NVD CVE API, Ubuntu Security Tracker, and GDELT news search; reports also link to CERT-In archives, CISA KEV, OSV, and the CVE Program record for cross-checking. |
 | **Backend or API key** | No keys. The Cloudflare Worker relays Ubuntu CVE JSON through a same-origin route; other public data is requested by the browser. |
 | **Search links** | CVE lookups and site searches can be shared through the URL. |
 
@@ -29,7 +29,7 @@
 
 | Search | What appears |
 | --- | --- |
-| **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. Ubuntu CVE lookups also show Ubuntu package statuses, priority, and related security notices. |
+| **CVE ID** | Description, publication and update dates, reporting source, CVSS score when available, affected products, weaknesses, and source references. Ubuntu CVE lookups also show Ubuntu package statuses, priority, and related security notices. Additional source links help researchers cross-check CERT-In, CISA KEV, OSV, and CVE records. |
 | **Site, domain, or product** | Up to 20 of the newest NVD keyword matches, plus public news coverage from the past six months when available. |
 | **Recent lookups** | Up to seven CVE IDs saved in this browser, so you can pick up where you left off. |
 

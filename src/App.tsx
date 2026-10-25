@@ -22,6 +22,7 @@ type SearchResult = { cve: NvdCve }
 type NewsArticle = { url: string; title: string; seendate: string; domain: string; language?: string }
 type UbuntuPackage = { name: string; statuses?: { release_codename: string; status: string; description?: string; pocket?: string }[] }
 type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: number; updated_at?: string; ubuntu_description?: string; notices_ids?: string[]; packages?: UbuntuPackage[] }
+type ExternalDatabase = { name: string; detail: string; url: string }
 
 const constellationPoints = [{ x: 38, y: 34 }, { x: 108, y: 19 }, { x: 220, y: 27 }, { x: 282, y: 67 }, { x: 224, y: 122 }, { x: 82, y: 119 }]
 const HISTORY_KEY = 'cve-atlas-history-v1'
@@ -137,6 +138,16 @@ function uniqueReferenceHosts(cve: NvdCve) {
     try { hosts.add(new URL(reference.url).hostname.replace(/^www\./, '')) } catch { /* Ignore malformed source links. */ }
   }
   return [...hosts].slice(0, 8)
+}
+
+function externalDatabasesFor(id: string): ExternalDatabase[] {
+  return [
+    { name: 'CERT-In vulnerability notes', detail: 'Official archive of vulnerability notes by year', url: 'https://www.cert-in.org.in/s2cMainServlet?pageid=VLNLIST' },
+    { name: 'CERT-In advisories', detail: 'Official archive of security advisories by year', url: 'https://www.cert-in.org.in/s2cMainServlet?pageid=PUBADVLIST' },
+    { name: 'CISA Known Exploited Vulnerabilities', detail: 'Check CISA’s catalog for this CVE', url: `https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=${encodeURIComponent(id)}` },
+    { name: 'OSV vulnerability record', detail: 'Open-source ecosystem advisories and affected packages', url: `https://osv.dev/vulnerability/${encodeURIComponent(id)}` },
+    { name: 'CVE Program record', detail: 'Official CVE record and its references', url: `https://www.cve.org/CVERecord?id=${encodeURIComponent(id)}` },
+  ]
 }
 
 function App() {
@@ -338,6 +349,7 @@ function App() {
   const products = useMemo(() => cve ? productsFor(cve) : [], [cve])
   const weaknesses = useMemo(() => [...new Set((cve?.weaknesses || []).flatMap((item) => (item.description || []).filter((entry) => entry.lang === 'en').map((entry) => entry.value)))], [cve])
   const referenceHosts = useMemo(() => cve ? uniqueReferenceHosts(cve) : [], [cve])
+  const externalDatabases = useMemo(() => cve ? externalDatabasesFor(cve.id) : [], [cve?.id])
   const disclosureQuery = siteQuery ? `"${siteQuery}" (vulnerability OR "security flaw" OR breach OR CVE)` : ''
   const googleDisclosureUrl = disclosureQuery ? `https://www.google.com/search?q=${encodeURIComponent(disclosureQuery)}` : ''
   const bingDisclosureUrl = disclosureQuery ? `https://www.bing.com/search?q=${encodeURIComponent(disclosureQuery)}` : ''
@@ -491,6 +503,11 @@ function App() {
               <div className="side-label"><span className="side-line" /> DISCOVERY DOMAIN</div>
               <div className="unknown-state"><span className="unknown-mark">?</span><p>Not stated in<br />this CVE record</p></div>
               <small className="side-note">A CVE may describe an affected product without naming the website or domain where it was discovered or tested.</small>
+            </section>
+            <section className="side-block database-block">
+              <div className="side-label"><span className="side-line side-line-muted" /> MORE PUBLIC SOURCES</div>
+              <div className="database-list">{externalDatabases.map((source) => <a className="database-link" key={source.name} href={source.url} target="_blank" rel="noreferrer"><span><b>{source.name}</b><small>{source.detail}</small></span><Icon name="external" size={13} /></a>)}</div>
+              <small className="side-note">These sources have separate coverage and may not contain a matching entry.</small>
             </section>
             <section className="side-block">
               <div className="side-label"><span className="side-line side-line-muted" /> REFERENCE DOMAINS <span className="ref-count">{referenceHosts.length.toString().padStart(2, '0')}</span></div>

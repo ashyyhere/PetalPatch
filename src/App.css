@@ -201,6 +201,14 @@
 
 .report-side { min-width: 0; padding-left: 23px; border-left: 1px solid #dce5f0; }
 .side-block { margin-bottom: 24px; }
+.database-list { display: grid; margin-top: 9px; }
+.database-link { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid #e5eaf3; color: inherit; text-decoration: none; transition: color .18s ease, border-color .18s ease; }
+.database-link > span { min-width: 0; display: grid; gap: 3px; }
+.database-link b { color: #4c5c87; font-size: 10px; font-weight: 600; }
+.database-link small { color: #7d8ba7; font-size: 8px; line-height: 1.45; }
+.database-link > svg { flex: 0 0 auto; color: #8792ac; }
+.database-link:hover b { color: #625aa8; }
+.database-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .side-label { display: flex; align-items: center; gap: 8px; color: #66789b; font: 8px var(--mono); letter-spacing: .08em; }
 .side-line { width: 15px; height: 2px; background: #9b86d5; }
 .side-line-muted { height: 1px; background: #76b8cd; }
@@ -278,6 +286,11 @@
 :root[data-theme='dark'] .site-result-row:hover, :root[data-theme='dark'] .news-result-row:hover { background: #262d43; }
 :root[data-theme='dark'] .data-rail { border-color: #46506a; }
 :root[data-theme='dark'] .data-point + .data-point, :root[data-theme='dark'] .data-point:last-child, :root[data-theme='dark'] .report-side, :root[data-theme='dark'] .report-side .domain-block { border-color: #343d55; }
+:root[data-theme='dark'] .database-link { border-color: #343d55; }
+:root[data-theme='dark'] .database-link b { color: #c0c9df; }
+:root[data-theme='dark'] .database-link small { color: #aab6d0; }
+:root[data-theme='dark'] .database-link > svg { color: #aab6d0; }
+:root[data-theme='dark'] .database-link:hover b { color: #d1c9ff; }
 :root[data-theme='dark'] .weakness-tag { border-color: #555274; color: #d1c9ff; background: #2b2a42; }
 :root[data-theme='dark'] .constellation-lines line { stroke: #5b5a7e; }
 :root[data-theme='dark'] .constellation-core { fill: #2c2a44; stroke: #aaa0e8; }
