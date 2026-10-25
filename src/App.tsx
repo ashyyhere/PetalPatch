@@ -324,7 +324,7 @@ function App() {
           <div className="search-meta"><span>{searchMode === 'site' ? 'Try' : 'Example'}</span><button type="button" onClick={() => searchMode === 'site' ? (setInput('wordpress.org'), void searchSite('wordpress.org')) : (setInput('CVE-2021-44228'), void lookup('CVE-2021-44228'))}>{searchMode === 'site' ? 'wordpress.org' : 'CVE-2021-44228'} <Icon name="arrow" size={13} /></button><span className="meta-divider" /><span>Source: NIST National Vulnerability Database</span></div>
         </section>
 
-        {error && <div className="error-banner" role="alert"><span className="error-glyph">!</span><span>{error}</span><button type="button" onClick={() => void lookup(input)}>Try again</button></div>}
+        {error && <div className="error-banner" role="alert"><span className="error-glyph">!</span><span>{error}</span><button type="button" onClick={() => searchMode === 'site' ? void searchSite(input) : void lookup(input)}>Try again</button></div>}
 
         {loading && !cve && searchMode === 'cve' && <section className="loading-state" aria-live="polite"><div className="loading-rail"><span /></div><p>Opening the source record…</p></section>}
         {loading && searchMode === 'site' && <section className="loading-state" aria-live="polite"><div className="loading-rail"><span /></div><p>Searching NVD for matching CVE records…</p></section>}
