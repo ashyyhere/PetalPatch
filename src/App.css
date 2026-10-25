@@ -208,6 +208,15 @@
 .domain-tick { display: inline-block; flex: 0 0 auto; width: 11px; height: 1px; background: #69aeca; }
 .side-empty { margin: 13px 0; color: #7c8baa; font-size: 10px; }
 .references-block { padding-top: 20px; border-top: 1px solid #e0e7f1; }
+.source-constellation { display: block; width: 100%; height: auto; max-height: 150px; margin: 12px 0 7px; overflow: visible; }
+.constellation-lines line { stroke: #c6c6e6; stroke-width: 1; stroke-dasharray: 2 4; }
+.constellation-core { fill: #eeeafa; stroke: #8e83cf; stroke-width: 1.5; }
+.constellation-core-label { fill: #625b9b; font: 7px var(--mono); }
+.constellation-node { fill: #fbfcff; stroke: #8f86cf; stroke-width: 1.5; transition: fill .18s ease, r .18s ease, stroke .18s ease; }
+.constellation-number { fill: #635ca1; font: 7px var(--mono); pointer-events: none; }
+.source-constellation a:hover .constellation-node, .source-constellation a:focus-visible .constellation-node { fill: #e8e4fa; stroke: #655cae; }
+.source-constellation a:focus-visible { outline: none; }
+.source-constellation a:focus-visible .constellation-node { stroke-width: 2.5; }
 .reference-link { display: flex; justify-content: space-between; align-items: center; gap: 9px; margin-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5eaf3; color: #52658e; font-size: 10px; text-decoration: none; }
 .reference-link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .reference-link svg { flex: 0 0 auto; color: #8290ac; }
@@ -254,6 +263,12 @@
 :root[data-theme='dark'] .data-rail { border-color: #46506a; }
 :root[data-theme='dark'] .data-point + .data-point, :root[data-theme='dark'] .data-point:last-child, :root[data-theme='dark'] .report-side, :root[data-theme='dark'] .report-side .domain-block { border-color: #343d55; }
 :root[data-theme='dark'] .weakness-tag { border-color: #555274; color: #d1c9ff; background: #2b2a42; }
+:root[data-theme='dark'] .constellation-lines line { stroke: #5b5a7e; }
+:root[data-theme='dark'] .constellation-core { fill: #2c2a44; stroke: #aaa0e8; }
+:root[data-theme='dark'] .constellation-core-label { fill: #d1c9ff; }
+:root[data-theme='dark'] .constellation-node { fill: #20263a; stroke: #aaa0e8; }
+:root[data-theme='dark'] .constellation-number { fill: #d1c9ff; }
+:root[data-theme='dark'] .source-constellation a:hover .constellation-node, :root[data-theme='dark'] .source-constellation a:focus-visible .constellation-node { fill: #393653; stroke: #d4ccff; }
 :root[data-theme='dark'] .ubuntu-section, :root[data-theme='dark'] .ubuntu-facts, :root[data-theme='dark'] .ubuntu-package { border-color: #343d55; }
 :root[data-theme='dark'] .ubuntu-note, :root[data-theme='dark'] .ubuntu-preview-label, :root[data-theme='dark'] .ubuntu-api-note, :root[data-theme='dark'] .ubuntu-notices > span { color: #aab6d0; }
 :root[data-theme='dark'] .ubuntu-record-link, :root[data-theme='dark'] .ubuntu-notices a { color: #c2baff; }

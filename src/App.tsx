@@ -23,6 +23,7 @@ type NewsArticle = { url: string; title: string; seendate: string; domain: strin
 type UbuntuPackage = { name: string; statuses?: { release_codename: string; status: string; description?: string; pocket?: string }[] }
 type UbuntuCve = { id: string; status?: string; priority?: string; cvss3?: number; updated_at?: string; ubuntu_description?: string; notices_ids?: string[]; packages?: UbuntuPackage[] }
 
+const constellationPoints = [{ x: 38, y: 34 }, { x: 108, y: 19 }, { x: 220, y: 27 }, { x: 282, y: 67 }, { x: 224, y: 122 }, { x: 82, y: 119 }]
 const HISTORY_KEY = 'cve-atlas-history-v1'
 const THEME_KEY = 'cve-atlas-theme-v1'
 const EXAMPLE_CVE = 'CVE-2021-44228'
@@ -479,6 +480,19 @@ function App() {
             </section>
             <section className="side-block references-block">
               <div className="side-label"><span className="side-line side-line-dim" /> SOURCE REFERENCES <span className="ref-count">{(cve.references || []).length.toString().padStart(2, '0')}</span></div>
+              {!!cve.references?.length && <svg className="source-constellation" viewBox="0 0 320 150" role="group" aria-label="Reference links arranged around the NVD record">
+                <g className="constellation-lines" aria-hidden="true">{cve.references.slice(0, 6).map((_, index) => {
+                  const point = constellationPoints[index]
+                  return point && <line key={index} x1="160" y1="72" x2={point.x} y2={point.y} />
+                })}</g>
+                <circle className="constellation-core" cx="160" cy="72" r="17" aria-hidden="true" /><text className="constellation-core-label" x="160" y="76" textAnchor="middle">NVD</text>
+                {cve.references.slice(0, 6).map((reference, index) => {
+                  const point = constellationPoints[index]
+                  return point && <a key={`${reference.url}-${index}`} href={reference.url} target="_blank" rel="noreferrer" aria-label={`Open source reference ${index + 1}: ${(reference.tags || []).find((tag) => tag !== 'Third Party Advisory') || reference.url}`}>
+                    <circle className="constellation-node" cx={point.x} cy={point.y} r="11" /><text className="constellation-number" x={point.x} y={point.y + 3.5} textAnchor="middle">{index + 1}</text>
+                  </a>
+                })}
+              </svg>}
               {(cve.references || []).slice(0, 6).map((reference, index) => <a className="reference-link" href={reference.url} target="_blank" rel="noreferrer" key={`${reference.url}-${index}`}><span>{(reference.tags || []).find((tag) => tag !== 'Third Party Advisory') || 'Reference'}</span><Icon name="external" size={13} /></a>)}
               {!(cve.references || []).length && <p className="side-empty">No references listed.</p>}
               {(cve.references || []).length > 6 && <a className="all-references" href={`https://nvd.nist.gov/vuln/detail/${cve.id}`} target="_blank" rel="noreferrer">View all {cve.references?.length} references <Icon name="arrow" size={13} /></a>}
